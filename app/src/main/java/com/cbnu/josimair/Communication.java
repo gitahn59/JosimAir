@@ -9,14 +9,13 @@ import android.util.Log;
 
 import java.util.Set;
 
-
 public class Communication {
 
     private BluetoothAdapter btAdapter;
     private Activity mActivity;
     private Handler mHandler;
 
-    public final static int REQUEST_CODE_ENABLE = 201;
+    public final static int REQUEST_CODE_ENABLE = 2001;
 
     Communication(Activity ac, Handler h){
         mActivity = ac;

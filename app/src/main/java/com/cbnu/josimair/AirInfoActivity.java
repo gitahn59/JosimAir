@@ -16,12 +16,12 @@ public class AirInfoActivity extends AppCompatActivity {
 
         Button btn = (Button)findViewById(R.id.button2);
         btn.setOnClickListener(
-                new Button.OnClickListener(){
-                    public void onClick(View v){
-                        Intent intent = new Intent(AirInfoActivity.this,StatisticsActivity.class);
-                        startActivity(intent);
-                    }
+            new Button.OnClickListener(){
+                public void onClick(View v){
+                    Intent intent = new Intent(AirInfoActivity.this,StatisticsActivity.class);
+                    startActivity(intent);
                 }
+            }
         );
     }
 }

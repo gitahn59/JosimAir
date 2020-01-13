@@ -3,6 +3,7 @@ package com.cbnu.josimair;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,7 +16,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Communication btService = null;
+    private Communication communication = null;
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -34,20 +35,35 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v){
                     //Intent intent = new Intent(MainActivity.this,AirInfoActivity.class);
                     //startActivity(intent);
-                    if(btService.enable()) {
+                    if(communication.enable()) {
+
+                        //Intent dIntent = new Intent( BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                        //dIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 100);
+                        //startActivity(dIntent);
                         startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class),123);
                     }
+
+
+
+                    // OUTDOOR AIR
+                    /*
+                    ArpltnInforInqireSvc svc = new ArpltnInforInqireSvc("서울");
+                    svc.setOnReceivedEvent(new ArpltnInforInqireSvc.ReceivedListener() {
+                        @Override
+                        public void onReceivedEvent(String xml) {
+                            Log.v("result",xml);
+                        }
+                    });
+                    svc.getAirInfo();
+                     */
                 }
             }
         );
 
 
-        if(btService == null){
-            btService = new Communication(this,mHandler);
+        if(communication == null){
+            communication = new Communication(this,mHandler);
         }
-
-        Log.e("hi","hi");
-
     }
 
     @Override
@@ -56,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode){
             case Communication.REQUEST_CODE_ENABLE:
                 if(resultCode == Activity.RESULT_OK){
-                    btService.start("test");
+                    communication.start("test");
                     startActivity(new Intent(MainActivity.this,DeviceListActivity.class));
                 }
                 break;
@@ -65,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         switch(resultCode){
             case DeviceListActivity.BT_SELECTED:
                 String s = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                Log.e("mac",s);
+
                 break;
         }
     }
