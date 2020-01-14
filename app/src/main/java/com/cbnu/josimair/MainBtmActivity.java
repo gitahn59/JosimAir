@@ -1,10 +1,14 @@
 package com.cbnu.josimair;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -29,6 +33,19 @@ public class MainBtmActivity extends AppCompatActivity {
         }
     };
 
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive (Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+                if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON){
+                    // Bluetooth is disconnected, do handling here
+                    Log.v("JosimAir","BT ON");
+                }
+            }
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +62,12 @@ public class MainBtmActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+        Log.e("JosinAir","test");
         if(communication == null){
             communication = new Communication(this,mHandler);
+            if(communication.enable()){
+                Log.e("JosinAir","bt is available");
+            }
         }
 
         if(svc == null){
@@ -68,8 +89,8 @@ public class MainBtmActivity extends AppCompatActivity {
 
         switch(resultCode){
             case DeviceListActivity.BT_SELECTED:
-                String s = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-
+                String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                communication.start(address);
                 break;
         }
     }
