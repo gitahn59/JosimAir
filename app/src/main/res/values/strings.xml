@@ -29,5 +29,16 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
+    <!-- Home Fragment -->
+    <string name="bluetooth_connect_btn">블루투스 연결</string>
+
+
+    <!-- air quality -->
+    <string name="air_quality_good">지금 공기는 좋음!</string>
+    <string name="air_quality_normal">지금 공기는 보통!</string>
+    <string name="air_quality_bad">지금 공기는 나쁨!</string>
+
+    <string name="empty_string">" "</string>
+
 
 </resources>

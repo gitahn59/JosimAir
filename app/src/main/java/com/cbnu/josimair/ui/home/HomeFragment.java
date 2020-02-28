@@ -1,11 +1,7 @@
 package com.cbnu.josimair.ui.home;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +35,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button btn = (Button) root.findViewById(R.id.button2);
+        Button btn = (Button) root.findViewById(R.id.btBtn);
         btn.setOnClickListener(
             new Button.OnClickListener(){
                 public void onClick(View v){

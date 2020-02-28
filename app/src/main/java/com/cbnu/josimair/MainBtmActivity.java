@@ -62,11 +62,11 @@ public class MainBtmActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        Log.e("JosinAir","test");
+        Log.e("JosimAir","test");
         if(communication == null){
             communication = new Communication(this,mHandler);
             if(communication.enable()){
-                Log.e("JosinAir","bt is available");
+                Log.e("JosimAir","bt is available");
             }
         }
 
