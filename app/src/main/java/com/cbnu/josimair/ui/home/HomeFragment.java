@@ -24,24 +24,17 @@ import com.cbnu.josimair.R;
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private Communication communication;
+    private TextView airInfoTextView;
+    private TextView airQualityTextView;
+    private Button btBtn;
 
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        homeViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                //textView.setText(s);
-            }
-        });
         communication = MainBtmActivity.communication;
-
-        final Button btBtn = (Button) root.findViewById(R.id.btBtn);
-        final TextView airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
-        final TextView airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
+        btBtn = (Button) root.findViewById(R.id.btBtn);
+        airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
+        airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
 
         if(communication.enable()){
             btBtn.setText(R.string.bluetooth_enabled_btn);
@@ -49,16 +42,21 @@ public class HomeFragment extends Fragment {
             btBtn.setText(R.string.bluetooth_connect_btn);
         }
 
+        setCallback();
+        return root;
+    }
+
+    public void setCallback(){
         btBtn.setOnClickListener(
-            new Button.OnClickListener(){
-                public void onClick(View v){
-                    if(!communication.enable()) {
-                        communication.showDialog();
-                    }else{ // 여기서 블루투스 리스트에서 디바이스를 선택하여 연결
-                        //Communication thread 시작
-                        communication.start_Test_Using_RandomData();
-                        //startActivityForResult(new Intent(v.getContext(), DeviceListActivity.class),Communication.RESULT_CODE_BTLIST);
-                    }
+                new Button.OnClickListener(){
+                    public void onClick(View v){
+                        if(!communication.enable()) {
+                            communication.showDialog();
+                        }else{ // 여기서 블루투스 리스트에서 디바이스를 선택하여 연결
+                            //Communication thread 시작
+                            communication.start_Test_Using_RandomData();
+                            //startActivityForResult(new Intent(v.getContext(), DeviceListActivity.class),Communication.RESULT_CODE_BTLIST);
+                        }
 
                 /*
                 ArpltnInforInqireSvc svc = new ArpltnInforInqireSvc("서울");
@@ -70,39 +68,25 @@ public class HomeFragment extends Fragment {
                 });
                 svc.getAirInfo();
                  */
+                    }
                 }
-            }
         );
 
         communication.setReceivedCallback(new Communication.ReceivedListener() {
             @Override
             public void onReceivedEvent() {
-                Log.e("JosimAir","공기정보 수신");
+                Log.i("HomeFragment","공기정보 수신");
                 try {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            IndoorAir air = communication.getReceivedAir();
-                            float value = air.getValue();
-                            switch (air.getQuality()) {
-                                case 1:
-                                    airInfoTextView.setText(R.string.air_quality_good);
-                                    break;
-                                case 2:
-                                    airInfoTextView.setText(R.string.air_quality_normal);
-                                    break;
-                                case 3:
-                                    airInfoTextView.setText(R.string.air_quality_bad);
-                                    break;
-                            }
-                            airQualityTextView.setText("" + value);
+                            homeViewModel.updateAirInfo(airInfoTextView,airQualityTextView,communication.getReceivedAir());
                         }
                     });
-                } catch (Exception e) {
+                }catch(Exception e){
                     e.printStackTrace();
                 }
             }
         });
-        return root;
     }
 }

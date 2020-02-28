@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">JosimAir</string>
 
+    <!-- Navigation -->
+    <string name="title_statistics">Statistics</string>
+    <string name="title_air">Air</string>
+
     <!--  BluetoothChat -->
     <string name="send">Send</string>
     <string name="not_connected">You are not connected to a device</string>

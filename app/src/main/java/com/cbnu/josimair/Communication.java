@@ -106,7 +106,6 @@ public class Communication {
                         receivedAir = new IndoorAir((float) Math.random() * 15);
                         //connected event occurred
                         Thread.sleep(1000);
-                        Log.i("JosimAir","공기정보 생성");
                         mReceivedListener.onReceivedEvent();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
