@@ -31,6 +31,7 @@
 
     <!-- Home Fragment -->
     <string name="bluetooth_connect_btn">블루투스 연결</string>
+    <string name="bluetooth_enabled_btn">블루투스 사용 가능</string>
 
 
     <!-- air quality -->

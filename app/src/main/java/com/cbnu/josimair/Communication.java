@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
+import com.cbnu.josimair.Model.IndoorAir;
+
 import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
@@ -21,6 +23,9 @@ public class Communication {
     private Handler mHandler;
     private BluetoothSocket btSocket;
     private String mAddress;
+    private IndoorAir receivedAir;
+    private AsyncTask task;
+    private boolean isEnded;
 
     public final static int REQUEST_CODE_ENABLE = 2001;
     public final static int RESULT_CODE_BTLIST = 2002;
@@ -28,17 +33,31 @@ public class Communication {
     public interface ConnectedListener{
         void onReceivedEvent();
     }
-
     private ConnectedListener mConnectedListener;
 
-    public void setOnErrorOccurredEvent(ConnectedListener listener){
+    public void setConnectedCallback(ConnectedListener listener){
         mConnectedListener = listener;
+    }
+
+    public interface ReceivedListener{
+        void onReceivedEvent();
+    }
+    private ReceivedListener mReceivedListener;
+    public void setReceivedCallback(ReceivedListener listener){
+        mReceivedListener = listener;
     }
 
     public Communication(Activity ac, Handler h){
         mActivity = ac;
         mHandler = h;
         btAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        task = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                return null;
+            }
+        };
     }
 
     public boolean enable(){
@@ -59,7 +78,7 @@ public class Communication {
 
     public void start(String address){
         mAddress=address;
-        AsyncTask.execute(new Runnable() {
+        task.execute(new Runnable() {
             @Override
             public void run() {
                 BluetoothDevice device=btAdapter.getRemoteDevice(mAddress);
@@ -77,8 +96,37 @@ public class Communication {
         });
     }
 
-    public void end(){
+    public void start_Test_Using_RandomData() {
+        isEnded = false;
+        task.execute(new Runnable() {
+            @Override
+            public void run() {
+                do {
+                    try {
+                        receivedAir = new IndoorAir((float) Math.random() * 15);
+                        //connected event occurred
+                        Thread.sleep(1000);
+                        Log.i("JosimAir","공기정보 생성");
+                        mReceivedListener.onReceivedEvent();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }while(!isEnded);
+            }
+        });
+    }
 
+    public void end(){
+        try {
+            task.cancel(true);
+            isEnded=true;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public IndoorAir getReceivedAir(){
+        return this.receivedAir;
     }
 
 }

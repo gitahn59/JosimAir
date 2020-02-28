@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.cbnu.josimair.Model.IndoorAir;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,10 +70,6 @@ public class MainBtmActivity extends AppCompatActivity {
                 Log.e("JosimAir","bt is available");
             }
         }
-
-        if(svc == null){
-            svc = new ArpltnInforInqireSvc("서울");
-        }
     }
 
     @Override
@@ -95,5 +92,11 @@ public class MainBtmActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("JosimAir","destroy");
+        communication.end();
+        finish();
+    }
 }
