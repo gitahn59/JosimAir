@@ -1,4 +1,4 @@
-package com.cbnu.josimair;
+package com.cbnu.josimair.Model;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;

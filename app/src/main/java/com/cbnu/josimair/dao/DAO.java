@@ -1,4 +1,4 @@
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.dao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

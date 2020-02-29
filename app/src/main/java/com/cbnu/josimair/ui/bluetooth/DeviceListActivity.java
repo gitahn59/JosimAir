@@ -1,4 +1,4 @@
-package com.cbnu.josimair;
+package com.cbnu.josimair.ui.bluetooth;
 
 import java.util.Set;
 
@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+
+import com.cbnu.josimair.R;
 
 /**
  * This Activity appears as a dialog. It lists any paired devices and

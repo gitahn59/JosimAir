@@ -42,6 +42,7 @@
     <string name="air_quality_good">지금 공기는 좋음!</string>
     <string name="air_quality_normal">지금 공기는 보통!</string>
     <string name="air_quality_bad">지금 공기는 나쁨!</string>
+    <string name="outdoor_air_info">이 시각 실외는</string>
 
     <string name="empty_string">" "</string>
 

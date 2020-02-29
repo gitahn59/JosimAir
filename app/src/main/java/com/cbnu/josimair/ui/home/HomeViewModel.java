@@ -36,4 +36,8 @@ public class HomeViewModel extends ViewModel {
         }
         quality.setText("" + air.getValue());
     }
+
+    public void updateOutdoorAirInfo(TextView quality, String air){
+        quality.setText(air);
+    }
 }

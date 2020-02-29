@@ -9,10 +9,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
-import com.cbnu.josimair.Model.IndoorAir;
+import com.cbnu.josimair.Model.ArpltnInforInqireSvc;
+import com.cbnu.josimair.Model.Communication;
+import com.cbnu.josimair.ui.bluetooth.DeviceListActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +24,7 @@ import androidx.navigation.ui.NavigationUI;
 public class MainBtmActivity extends AppCompatActivity {
 
     public static Communication communication = null;
-
-    public static ArpltnInforInqireSvc svc=null;
+    public static ArpltnInforInqireSvc svc = null;
 
     private final Handler mHandler = new Handler() {
         @Override
@@ -46,7 +45,6 @@ public class MainBtmActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,13 +61,8 @@ public class MainBtmActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        Log.e("JosimAir","test");
-        if(communication == null){
-            communication = new Communication(this,mHandler);
-            if(communication.enable()){
-                Log.e("JosimAir","bt is available");
-            }
-        }
+        if(communication == null) communication = new Communication(this,mHandler);
+        if(svc == null) svc = new ArpltnInforInqireSvc("서울");
     }
 
     @Override

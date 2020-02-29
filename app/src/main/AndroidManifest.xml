@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DeviceListActivity"
+            android:name=".ui.bluetooth.DeviceListActivity"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />
     </application>
 
