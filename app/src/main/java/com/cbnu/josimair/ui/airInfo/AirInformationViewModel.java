@@ -1,4 +1,4 @@
-package com.cbnu.josimair.ui.notifications;
+package com.cbnu.josimair.ui.airInfo;
 
 import android.widget.TextView;
 
@@ -9,11 +9,11 @@ import androidx.lifecycle.ViewModel;
 import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.R;
 
-public class NotificationsViewModel extends ViewModel {
+public class AirInformationViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public NotificationsViewModel() {
+    public AirInformationViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is notifications fragment");
     }

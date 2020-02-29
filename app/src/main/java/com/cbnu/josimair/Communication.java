@@ -105,8 +105,8 @@ public class Communication {
                     try {
                         receivedAir = new IndoorAir((float) Math.random() * 15);
                         //connected event occurred
-                        Thread.sleep(1000);
                         mReceivedListener.onReceivedEvent();
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

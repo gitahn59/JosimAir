@@ -16,18 +16,18 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/airQualityTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/empty_string" />
-
-            <TextView
                 android:id="@+id/airInfoTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/air_quality_good" />
+
+            <TextView
+                android:id="@+id/airQualityTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/empty_string" />
 
             <Button
                 android:id="@+id/btBtn"

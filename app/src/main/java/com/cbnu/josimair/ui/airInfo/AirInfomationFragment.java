@@ -1,35 +1,32 @@
-package com.cbnu.josimair.ui.notifications;
+package com.cbnu.josimair.ui.airInfo;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.cbnu.josimair.Communication;
 import com.cbnu.josimair.MainBtmActivity;
 import com.cbnu.josimair.R;
 
-public class NotificationsFragment extends Fragment {
+public class AirInfomationFragment extends Fragment {
 
-    private NotificationsViewModel notificationsViewModel;
+    private AirInformationViewModel airInformationViewModel;
     private Communication communication;
     private TextView airInfoTextView;
     private TextView airQualityTextView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                ViewModelProviders.of(this).get(NotificationsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_notifications, container, false);
+        airInformationViewModel =
+                ViewModelProviders.of(this).get(AirInformationViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_airinformation, container, false);
 
         communication = MainBtmActivity.communication;
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
@@ -48,7 +45,7 @@ public class NotificationsFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            notificationsViewModel.updateAirInfo(airInfoTextView, airQualityTextView, communication.getReceivedAir());
+                            airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, communication.getReceivedAir());
                         }
                     });
                 } catch (Exception e) {
