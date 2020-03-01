@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.cbnu.josimair.Model.Communication;
-import com.cbnu.josimair.MainBtmActivity;
+import com.cbnu.josimair.ui.MainBtmActivity;
 import com.cbnu.josimair.R;
 
 public class AirInfomationFragment extends Fragment {

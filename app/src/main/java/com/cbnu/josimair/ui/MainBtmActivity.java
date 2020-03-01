@@ -1,4 +1,4 @@
-package com.cbnu.josimair;
+package com.cbnu.josimair.ui;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.cbnu.josimair.Model.ArpltnInforInqireSvc;
 import com.cbnu.josimair.Model.Communication;
+import com.cbnu.josimair.Model.AppDatabase;
+import com.cbnu.josimair.R;
 import com.cbnu.josimair.ui.bluetooth.DeviceListActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -20,11 +22,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.room.Room;
 
 public class MainBtmActivity extends AppCompatActivity {
 
     public static Communication communication = null;
     public static ArpltnInforInqireSvc svc = null;
+    public static AppDatabase db = null;
 
     private final Handler mHandler = new Handler() {
         @Override
@@ -62,7 +66,12 @@ public class MainBtmActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         if(communication == null) communication = new Communication(this,mHandler);
-        if(svc == null) svc = new ArpltnInforInqireSvc("서울");
+        if(svc == null) {
+            svc = new ArpltnInforInqireSvc("서울");
+            svc.start();
+        }
+        //싱글톤
+        if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest").build();
     }
 
     @Override

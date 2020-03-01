@@ -30,7 +30,6 @@ public class ArpltnInforInqireSvc {
     private String airInfoXml;
     private String airInfo;
 
-
     // received event
     ///////////////////////////////////////////////////////////////////////////////////////////
     public interface ReceivedListener{
@@ -104,7 +103,8 @@ public class ArpltnInforInqireSvc {
                 try {
                     List<Item> li = parse(new StringReader(response.toString()));
                     for(Item item : li){
-                        airInfo+=item.stationName +"\n";
+                        if(item.stationName.equals("송파구"))
+                            airInfo+=item.stationName + " : "+item.coValue+"\n";
                     }
                 }catch(XmlPullParserException e){
                     e.printStackTrace();
@@ -128,9 +128,11 @@ public class ArpltnInforInqireSvc {
 
     public static class Item{
         public final String stationName;
+        public final float coValue;
 
-        public Item(String stationName) {
+        public Item(String stationName, float coValue) {
             this.stationName = stationName;
+            this.coValue = coValue;
         }
     }
 
@@ -197,27 +199,29 @@ public class ArpltnInforInqireSvc {
     private Item readItem(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, "item");
         String statationName = null;
-        String summary = null;
-        String link = null;
+        String coValue = null;
+
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
             if (name.equals("stationName")) {
-                statationName = readStationName(parser);
+                statationName = readUsingName(parser,"stationName");
             }
-            else {
+            else if(name.equals("coValue")){
+                coValue = readUsingName(parser,"coValue");
+            }else{
                 skip(parser);
             }
         }
-        return new Item(statationName);
+        return new Item(statationName, Float.valueOf(coValue));
     }
 
-    private String readStationName(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null,"stationName");
+    private String readUsingName(XmlPullParser parser, String name) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null,name);
         String stationName = readText(parser);
-        parser.require(XmlPullParser.END_TAG, null, "stationName");
+        parser.require(XmlPullParser.END_TAG, null, name);
         return stationName;
     }
 

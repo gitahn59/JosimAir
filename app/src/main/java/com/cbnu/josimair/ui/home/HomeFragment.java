@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.cbnu.josimair.Model.ArpltnInforInqireSvc;
 import com.cbnu.josimair.Model.Communication;
-import com.cbnu.josimair.MainBtmActivity;
+import com.cbnu.josimair.ui.MainBtmActivity;
 import com.cbnu.josimair.R;
 
 public class HomeFragment extends Fragment {
@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
             btBtn.setText(R.string.bluetooth_connect_btn);
         }
         setCallback();
-        svc.start();
+        homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,svc.getAirInfo());
         return root;
     }
 

@@ -5,21 +5,35 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-public class DAO {
-    DAO(){
+import androidx.room.*;
 
-    }
-    public static final class CreateDB implements BaseColumns{
-        public static final String USERID = "userid";
-        public static final String NAME = "name";
-        public static final String AGE = "age";
-        public static final String GENDER = "gender";
-        public static final String _TABLENAME0 = "usertable";
-        public static final String _CREATE0 = "create table if not exists "+_TABLENAME0+"("
-                +_ID+" integer primary key autoincrement, "
-                +USERID+" text not null , "
-                +NAME+" text not null , "
-                +AGE+" integer not null , "
-                +GENDER+" text not null );";
-    }
+import com.cbnu.josimair.Model.IndoorAir;
+
+import java.util.Date;
+import java.util.List;
+
+@Dao
+public interface DAO {
+    @Query("SELECT * FROM indoorair")
+    List<IndoorAir> getAll();
+
+    @Query("SELECT * FROM indoorair WHERE time BETWEEN :from AND :to")
+    List<IndoorAir> loadAllBetweenDates(Date from, Date to);
+
+    /*
+    @Query("SELECT * FROM user WHERE first_name LIKE :first AND " +
+            "last_name LIKE :last LIMIT 1")
+    User findByName(String first, String last);
+
+     */
+    @Insert
+    void insertAll(IndoorAir... indoorAir);
+
+    @Delete
+    void delete(IndoorAir indoorAir);
 }
+
+
+
+
+
