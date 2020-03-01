@@ -46,5 +46,8 @@
 
     <string name="empty_string">" "</string>
 
+    <!-- btn string -->
+    <string name = "btn_update">update</string>
+
 
 </resources>

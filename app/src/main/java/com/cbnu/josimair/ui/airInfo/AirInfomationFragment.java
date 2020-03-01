@@ -40,7 +40,7 @@ public class AirInfomationFragment extends Fragment {
         communication.setReceivedCallback(new Communication.ReceivedListener() {
             @Override
             public void onReceivedEvent() {
-                Log.i("AirFragment","공기정보 수신");
+                Log.i("AirFragment","실내 공기정보 수신");
                 try {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
