@@ -18,6 +18,7 @@ import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.ui.MainBtmActivity;
 import com.cbnu.josimair.R;
 import com.cbnu.josimair.Model.AppDatabase;
+import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class StatisticsFragment extends Fragment {
 
     private TextView statisticsTextView;
     private Button updateBtn;
+    LineChart lineChart;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -46,12 +48,14 @@ public class StatisticsFragment extends Fragment {
 
         statisticsTextView = (TextView)root.findViewById(R.id.statisticsTextView);
         updateBtn = (Button) root.findViewById(R.id.updateBtn);
+        lineChart = (LineChart)root.findViewById(R.id.line_chart);
+
 
         db = MainBtmActivity.db;
 
         setCallback();
-        setStatisticsViews();
-
+        //setStatisticsViews();
+        drawChart();
         return root;
     }
 
@@ -86,5 +90,26 @@ public class StatisticsFragment extends Fragment {
                 }
             }
         }).start();
+    }
+
+    public void drawChart(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final List<IndoorAir> li = db.indoorAirDao().getAll();
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            statisticsViewModel.updateStatistics(lineChart,li);
+                        }
+                    });
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
     }
 }
