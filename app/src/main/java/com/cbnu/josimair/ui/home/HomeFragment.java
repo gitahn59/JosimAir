@@ -42,8 +42,11 @@ public class HomeFragment extends Fragment {
         }else{
             btBtn.setText(R.string.bluetooth_connect_btn);
         }
+
+        if(svc.isArived())
+            homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,svc.getAirInfo());
+
         setCallback();
-        homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,svc.getAirInfo());
         return root;
     }
 
@@ -95,5 +98,23 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+
+        svc.setOnErrorOccurredEvent(new ArpltnInforInqireSvc.ErrorOccurredListener() {
+            @Override
+            public void onReceivedEvent() {
+                Log.i("HomeFragment","실외 공기정보 수신 실패");
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,"네트워크 상태를 확인하세요");
+                        }
+                    });
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 }

@@ -39,13 +39,13 @@ public class MainBtmActivity extends AppCompatActivity {
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive (Context context, Intent intent) {
-            String action = intent.getAction();
-            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON){
-                    // Bluetooth is disconnected, do handling here
-                    Log.v("JosimAir","BT ON");
-                }
+        String action = intent.getAction();
+        if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+            if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON){
+                // Bluetooth is disconnected, do handling here
+                Log.v("JosimAir","BT ON");
             }
+        }
         }
     };
 
@@ -54,8 +54,6 @@ public class MainBtmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_btm);
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home,
                 R.id.navigation_dashboard,
@@ -65,12 +63,13 @@ public class MainBtmActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+        //싱글톤
         if(communication == null) communication = new Communication(this,mHandler);
         if(svc == null) {
-            svc = new ArpltnInforInqireSvc("서울");
+            svc = new ArpltnInforInqireSvc(this);
+            svc.setlocation("서울");
             svc.start();
         }
-        //싱글톤
         if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest").build();
     }
 

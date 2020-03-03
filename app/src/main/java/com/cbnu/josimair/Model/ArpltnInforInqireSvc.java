@@ -1,5 +1,10 @@
 package com.cbnu.josimair.Model;
 
+import android.app.Activity;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -26,8 +31,52 @@ public class ArpltnInforInqireSvc {
     private static final String api = "openapi.airkorea.or.kr";
     private static final String svcKey = "Ykpt%2Ffoyi49PDgJhtLVWnE1QB8R1t08idlq1Yieti3brksGN%2F7qszre1MeWYvX3uNXGx4V8PkUSzkeVU0g837Q%3D%3D";
     private static final String version="1.3";
-    private String mlocation;
-    private String airInfoXml;
+    private String location;
+    private Activity activity;
+    private static boolean isNetworkConnected=false;
+
+    public ArpltnInforInqireSvc(Activity activity){
+        this.activity = activity;
+        airInfo = "";
+
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Activity.CONNECTIVITY_SERVICE);
+            NetworkRequest.Builder builder = new NetworkRequest.Builder();
+            connectivityManager.registerNetworkCallback(builder.build(),new ConnectivityManager.NetworkCallback() {
+                        @Override
+                        public void onAvailable(Network network) {
+                            ArpltnInforInqireSvc.isNetworkConnected = true; // Global Static Variable
+                        }
+                        @Override
+                        public void onLost(Network network) {
+                            ArpltnInforInqireSvc.isNetworkConnected = false; // Global Static Variable
+                        }
+                    }
+            );
+            ArpltnInforInqireSvc.isNetworkConnected = false;
+        }catch (Exception e){
+            ArpltnInforInqireSvc.isNetworkConnected = false;
+        }
+    }
+
+    public boolean isArived() {
+        return isArived;
+    }
+
+    public void setArived(boolean arived) {
+        isArived = arived;
+    }
+
+    private boolean isArived;
+
+    public String getlocation() {
+        return location;
+    }
+
+    public void setlocation(String location) {
+        this.location = location;
+    }
+
     private String airInfo;
 
     // received event
@@ -52,16 +101,13 @@ public class ArpltnInforInqireSvc {
     ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public ArpltnInforInqireSvc(String city){
-        mlocation=city;
-        airInfo = "";
-    }
     public String getAirInfo(){ return this.airInfo; }
 
     public void start(){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                isArived = false;
                 rest();
             }
         });
@@ -81,13 +127,22 @@ public class ArpltnInforInqireSvc {
                 .appendQueryParameter("ver",version);
         String url = builder.build().toString();
         url += ("&ServiceKey=" + svcKey);
-        url += ("&sidoName=" + mlocation);
+        url += ("&sidoName=" + location);
 
         return url;
     }
 
     private void rest(){
         try {
+            do{
+                if(isNetworkConnected) break;
+                try {
+                    Thread.sleep(500);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }while(true);
+
             URL endpoint = new URL(makeUrl());
             HttpURLConnection connection = (HttpURLConnection) endpoint.openConnection();
             connection.setRequestProperty("Accept", "application/xml");
@@ -110,7 +165,10 @@ public class ArpltnInforInqireSvc {
                     e.printStackTrace();
                 }catch(IOException ioe){
                     ioe.printStackTrace();
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
+                isArived = true;
                 mReceivedListener.onReceivedEvent(response.toString());
             }
             else{
@@ -215,7 +273,11 @@ public class ArpltnInforInqireSvc {
                 skip(parser);
             }
         }
-        return new Item(statationName, Float.valueOf(coValue));
+        try {
+            return new Item(statationName, Float.valueOf(coValue));
+        }catch(Exception e){
+            return new Item(statationName, -1f);
+        }
     }
 
     private String readUsingName(XmlPullParser parser, String name) throws IOException, XmlPullParserException {
