@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cbnu.josimair.Model.IndoorAir;
+import com.cbnu.josimair.Model.OutdoorAir;
 import com.cbnu.josimair.R;
 
 public class HomeViewModel extends ViewModel {
@@ -37,7 +38,8 @@ public class HomeViewModel extends ViewModel {
         quality.setText("" + air.getValue());
     }
 
-    public void updateOutdoorAirInfo(TextView quality, String air){
-        quality.setText(air);
+    public void updateOutdoorAirInfo(TextView quality, OutdoorAir air){
+        if(air!=null)
+            quality.setText(air.getGu() + " : " + air.getValue());
     }
 }

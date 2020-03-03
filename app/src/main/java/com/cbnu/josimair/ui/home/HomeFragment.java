@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.cbnu.josimair.Model.ArpltnInforInqireSvc;
+import com.cbnu.josimair.Model.RestAPIService;
 import com.cbnu.josimair.Model.Communication;
 import com.cbnu.josimair.ui.MainBtmActivity;
 import com.cbnu.josimair.R;
@@ -20,7 +20,7 @@ import com.cbnu.josimair.R;
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private Communication communication;
-    private ArpltnInforInqireSvc svc;
+    private RestAPIService svc;
     private TextView airInfoTextView;
     private TextView airQualityTextView;
     private TextView outdoorAirQualityTextView;
@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment {
         }
 
         if(svc.isArived())
-            homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,svc.getAirInfo());
+            homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,svc.getAir());
 
         setCallback();
         return root;
@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        svc.setOnReceivedEvent(new ArpltnInforInqireSvc.ReceivedListener() {
+        svc.setOnReceivedEvent(new RestAPIService.ReceivedListener() {
             @Override
             public void onReceivedEvent(String xml) {
                 Log.i("HomeFragment","실외 공기정보 수신");
@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,svc.getAirInfo());
+                            homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,svc.getAir());
                         }
                     });
                 }catch(Exception e){
@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        svc.setOnErrorOccurredEvent(new ArpltnInforInqireSvc.ErrorOccurredListener() {
+        svc.setOnErrorOccurredEvent(new RestAPIService.ErrorOccurredListener() {
             @Override
             public void onReceivedEvent() {
                 Log.i("HomeFragment","실외 공기정보 수신 실패");
@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,"네트워크 상태를 확인하세요");
+                            homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,null);
                         }
                     });
                 }catch(Exception e){

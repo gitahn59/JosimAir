@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.cbnu.josimair.Model.ArpltnInforInqireSvc;
+import com.cbnu.josimair.Model.RestAPIService;
 import com.cbnu.josimair.Model.Communication;
 import com.cbnu.josimair.Model.AppDatabase;
 import com.cbnu.josimair.R;
@@ -27,7 +27,7 @@ import androidx.room.Room;
 public class MainBtmActivity extends AppCompatActivity {
 
     public static Communication communication = null;
-    public static ArpltnInforInqireSvc svc = null;
+    public static RestAPIService svc = null;
     public static AppDatabase db = null;
 
     private final Handler mHandler = new Handler() {
@@ -66,7 +66,7 @@ public class MainBtmActivity extends AppCompatActivity {
         //싱글톤
         if(communication == null) communication = new Communication(this,mHandler);
         if(svc == null) {
-            svc = new ArpltnInforInqireSvc(this);
+            svc = new RestAPIService(this);
             svc.setlocation("서울");
             svc.start();
         }
