@@ -20,12 +20,9 @@ public interface DAO {
     @Query("SELECT * FROM indoorair WHERE time BETWEEN :from AND :to")
     List<IndoorAir> loadAllBetweenDates(Date from, Date to);
 
-    /*
-    @Query("SELECT * FROM user WHERE first_name LIKE :first AND " +
-            "last_name LIKE :last LIMIT 1")
-    User findByName(String first, String last);
+    @Query("DELETE FROM indoorair WHERE time BETWEEN :from AND :to")
+    void deleteAllBetweenDates(Date from, Date to);
 
-     */
     @Insert
     void insertAll(IndoorAir... indoorAir);
 
