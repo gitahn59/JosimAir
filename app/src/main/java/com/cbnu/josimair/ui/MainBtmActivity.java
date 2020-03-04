@@ -1,10 +1,14 @@
 package com.cbnu.josimair.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +27,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.room.Room;
+
+import java.io.IOException;
+import java.util.List;
 
 public class MainBtmActivity extends AppCompatActivity {
 
@@ -66,11 +73,17 @@ public class MainBtmActivity extends AppCompatActivity {
         //싱글톤
         if(communication == null) communication = new Communication(this,mHandler);
         if(svc == null) {
-            svc = new RestAPIService(this);
-            svc.setlocation("서울");
+            svc = new RestAPIService(this,"서울","송파구");
             svc.start();
         }
         if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest").build();
+
+        if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            }
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
     }
 
     @Override
@@ -81,6 +94,15 @@ public class MainBtmActivity extends AppCompatActivity {
                 if(resultCode == Activity.RESULT_OK){
                     //communication.start("test");
                     //startActivity(new Intent(MainBtmActivity.this,DeviceListActivity.class));
+                }
+                break;
+            case 1:
+                Geocoder mGeoCoder = new Geocoder(this);
+                try {
+                    List<Address> list = mGeoCoder.getFromLocation(14151601.4047335, 4509401.5071296, 1);
+                    int a = 3;
+                }catch(IOException e){
+
                 }
                 break;
         }

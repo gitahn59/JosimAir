@@ -1,8 +1,13 @@
 package com.cbnu.josimair.Model;
 
+import android.location.Geocoder;
+import android.util.Pair;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 public class JsonParser {
     String json;
@@ -38,10 +43,50 @@ public class JsonParser {
         } catch (JSONException e) {
             e.printStackTrace();
         } finally{
-            if(value==0)
+            if(value==-1)
                 return null;
             else
                 return new OutdoorAir(city,gu, value, quality);
+        }
+    }
+
+
+    public Pair<Double, Double> getTMLocation(){
+        Double first=0.0;
+        Double second=0.0;
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray jarray = jsonObject.getJSONArray("list");
+            for(int i=0; i < jarray.length(); i++){
+                JSONObject jObject = jarray.getJSONObject(i);
+                first= Double.parseDouble(jObject.getString("tmX"));
+                second= Double.parseDouble(jObject.getString("tmY"));
+                break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally{
+            if(first==0)
+                return null;
+            else
+                return new Pair<Double, Double>(first,second);
+        }
+    }
+
+    public String getNearByStation(){
+        String stationName=null;
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray jarray = jsonObject.getJSONArray("list");
+            for(int i=0; i < jarray.length(); i++){
+                JSONObject jObject = jarray.getJSONObject(i);
+                stationName = jObject.getString("stationName");
+                break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally{
+            return stationName;
         }
     }
 }
