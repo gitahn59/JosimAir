@@ -115,7 +115,8 @@ public class RestAPIService {
                 .appendPath("getCtprvnRltmMesureDnsty")
                 .appendQueryParameter("pageNo","1")
                 .appendQueryParameter("numOfRows","50")
-                .appendQueryParameter("ver",version);
+                .appendQueryParameter("ver",version)
+                .appendQueryParameter("_returnType","json");
         String url = builder.build().toString();
         url += ("&ServiceKey=" + svcKey);
         url += ("&sidoName=" + location);
@@ -136,7 +137,7 @@ public class RestAPIService {
 
             URL endpoint = new URL(makeUrl());
             HttpURLConnection connection = (HttpURLConnection) endpoint.openConnection();
-            connection.setRequestProperty("Accept", "application/xml");
+            connection.setRequestProperty("Accept", "application/json");
             if(connection.getResponseCode()==200){
                 //Sucess
                 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -146,8 +147,8 @@ public class RestAPIService {
                 in.close();
 
                 try {
-                    XmlParser parser = new XmlParser("서울","송파구",response.toString());
-                    this.air = parser.parse();
+                    JsonParser jp = new JsonParser(response.toString());
+                    this.air = jp.getOutdoor("서울","송파구");
                 }catch(Exception e){
                     e.printStackTrace();
                 }
