@@ -50,5 +50,9 @@
     <string name = "btn_update">update</string>
     <string name = "btn_delete">delete</string>
 
+    <!-- Network State -->
+    <string name = "network_error">인터넷 상태를 확인하세요</string>
+    <string name = "network_receiving">수신중입니다</string>
+
 
 </resources>
