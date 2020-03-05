@@ -1,6 +1,8 @@
 package com.cbnu.josimair.Model;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkRequest;
@@ -12,30 +14,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class RestAPIService {
-    private static final String api = "openapi.airkorea.or.kr";
-    private static final String key = "Ykpt%2Ffoyi49PDgJhtLVWnE1QB8R1t08idlq1Yieti3brksGN%2F7qszre1MeWYvX3uNXGx4V8PkUSzkeVU0g837Q%3D%3D";
-    private String city;
-    private String gu;
-    private OutdoorAir air=null;
-
-    public OutdoorAir getAir() {
-        return air;
-    }
-
-    public RestAPIService(Activity activity, String city, String gu){
-        this.city = city;
-        this.gu = gu;
-    }
-
-    public boolean isArived() {
-        return isArived;
-    }
-
-    private boolean isArived;
-
     // received event
     ///////////////////////////////////////////////////////////////////////////////////////////
     public interface ReceivedListener{
@@ -57,17 +40,98 @@ public class RestAPIService {
     public void setOnErrorOccurredEvent(ErrorOccurredListener listener){ mErrorOccurredListener = listener; }
     ///////////////////////////////////////////////////////////////////////////////////////////
 
+    // error occurred event
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public interface preparedListener {
+        void onPreparedEvent();
+    }
+    private preparedListener mPreparedListener;
+
+    public void setPreparedEvent(preparedListener listener){ mPreparedListener = listener; }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    private static final String api = "openapi.airkorea.or.kr";
+    private static final String key = "Ykpt%2Ffoyi49PDgJhtLVWnE1QB8R1t08idlq1Yieti3brksGN%2F7qszre1MeWYvX3uNXGx4V8PkUSzkeVU0g837Q%3D%3D";
+    private String city;
+    private String gu;
+    private OutdoorAir air=null;
+    private static boolean isNetworkConnected=false;
+    private Activity activity;
+    private Timer timer;
+    private int period=3600000;
+
+    public void setLocation(String city, String gu){
+        this.city = city;
+        this.gu = gu;
+    }
+
+    public RestAPIService(Activity activity){
+        this.activity=activity;
+        this.air=null;
+        setCheckNetworkState();
+    }
+
+    public void setCheckNetworkState(){
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Activity.CONNECTIVITY_SERVICE);
+            NetworkRequest.Builder builder = new NetworkRequest.Builder();
+            connectivityManager.registerNetworkCallback(builder.build(),new ConnectivityManager.NetworkCallback() {
+                        @Override
+                        public void onAvailable(Network network) {
+                            RestAPIService.isNetworkConnected = true; // Global Static Variable
+                            checkPrepared();
+                        }
+                        @Override
+                        public void onLost(Network network) {
+                            RestAPIService.isNetworkConnected = false; // Global Static Variable
+                        }
+                    }
+            );
+        }catch (Exception e){
+            RestAPIService.isNetworkConnected = false;
+        }
+    }
+
+    public void checkPrepared(){
+        if(isGranted() && RestAPIService.isNetworkConnected) {
+            if(mPreparedListener!=null)
+                mPreparedListener.onPreparedEvent();
+        }
+    }
+
+    public boolean isGranted() {
+        if(activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+    public OutdoorAir getAir() {
+        return air;
+    }
+
     public void start(){
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                task();
+            }
+        };
+        timer = new Timer();
+        timer.schedule(timerTask,0,period);
+    }
+
+    public void task(){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                isArived = false;
                 Pair<Double,Double> tmLocation = getTMLocation();
                 if(tmLocation!=null) {
                     if (getNearByStationInfo(tmLocation)){
                         getOutdoorAir();
                     }
                 }else{
+                    timer.cancel();
                     mErrorOccurredListener.onErrorOccurredEvent();
                 }
             }
@@ -144,6 +208,17 @@ public class RestAPIService {
         }
     }
 
+    private boolean getNearByStationInfo(Pair<Double,Double> tmLocation){
+        try {
+            String json=getJsonResult(makeNearbyStationUrl(tmLocation));
+            JsonParser jp = new JsonParser(json);
+            this.gu = jp.getNearByStation();
+            return true;
+        }catch(Exception e){
+            return false;
+        }
+    }
+
     private void getOutdoorAir(){
         try {
             String json=getJsonResult(makeOutdoorAirUrl());
@@ -153,17 +228,6 @@ public class RestAPIService {
         }
         catch(Exception e){
             mErrorOccurredListener.onErrorOccurredEvent();
-        }
-    }
-
-    private boolean getNearByStationInfo(Pair<Double,Double> tmLocation){
-        try {
-            String json=getJsonResult(makeNearbyStationUrl(tmLocation));
-            JsonParser jp = new JsonParser(json);
-            this.gu = jp.getNearByStation();
-            return true;
-        }catch(Exception e){
-            return false;
         }
     }
 

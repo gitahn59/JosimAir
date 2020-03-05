@@ -1,10 +1,7 @@
 package com.cbnu.josimair.ui.home;
 
-import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,10 +33,8 @@ public class HomeFragment extends Fragment {
 
     private Button btBtn;
     private Button locationBtn;
+    Geocoder geoCoder;
 
-
-    Geocoder mGeoCoder;
-    LocationManager locationManager;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
@@ -49,12 +44,12 @@ public class HomeFragment extends Fragment {
 
         btBtn = (Button) root.findViewById(R.id.btBtn);
         locationBtn = (Button) root.findViewById(R.id.locationBtn);
-        mGeoCoder = new Geocoder(root.getContext());
-        locationManager = (LocationManager) root.getContext().getSystemService(Context.LOCATION_SERVICE);
 
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
         outdoorAirQualityTextView = (TextView)root.findViewById(R.id.outdoorAirQualityTextView);
+
+        geoCoder = new Geocoder(root.getContext());
 
         if(communication.enable()){
             btBtn.setText(R.string.bluetooth_enabled_btn);
@@ -62,10 +57,15 @@ public class HomeFragment extends Fragment {
             btBtn.setText(R.string.bluetooth_connect_btn);
         }
 
-        homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,svc.getAir());
-
         setCallback();
+        updateOutdoorAirInfo();
+
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     public void setCallback(){
@@ -82,19 +82,6 @@ public class HomeFragment extends Fragment {
                     }
                 }
         );
-
-        locationBtn.setOnClickListener(
-                new Button.OnClickListener(){
-                    public void onClick(View v){
-                        try {
-                            List<Address> list = mGeoCoder.getFromLocation(37.5082, 127.1179, 1);
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                }
-        );
-
         communication.setReceivedCallback(new Communication.ReceivedListener() {
             @Override
             public void onReceivedEvent() {
@@ -115,36 +102,42 @@ public class HomeFragment extends Fragment {
         svc.setOnReceivedEvent(new RestAPIService.ReceivedListener() {
             @Override
             public void onReceivedEvent(final OutdoorAir air) {
-                Log.i("HomeFragment", "실외 공기정보 수신");
-                try {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView, svc.getAir());
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+               updateOutdoorAirInfo();
             }
         });
 
         svc.setOnErrorOccurredEvent(new RestAPIService.ErrorOccurredListener() {
             @Override
             public void onErrorOccurredEvent() {
-                Log.i("HomeFragment","실외 공기정보 수신 실패");
-                try {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,null);
-                        }
-                    });
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+                updateOutdoorAirInfo();
             }
         });
 
+        svc.setPreparedEvent(new RestAPIService.preparedListener() {
+            @Override
+            public void onPreparedEvent() {
+                try {
+                    List<Address> list = geoCoder.getFromLocation(37.5082, 127.1179, 1);
+                    svc.setLocation("서울","송파구");
+                    svc.start(); // 공기 정보 요청
+                }catch(IOException e){
+
+                }
+            }
+        });
     }
+
+    public void updateOutdoorAirInfo(){
+        try {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,svc.getAir());
+                }
+            });
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

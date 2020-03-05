@@ -20,6 +20,8 @@ import com.cbnu.josimair.Model.AppDatabase;
 import com.cbnu.josimair.R;
 import com.cbnu.josimair.ui.bluetooth.DeviceListActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -29,6 +31,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.room.Room;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainBtmActivity extends AppCompatActivity {
@@ -36,6 +39,19 @@ public class MainBtmActivity extends AppCompatActivity {
     public static Communication communication = null;
     public static RestAPIService svc = null;
     public static AppDatabase db = null;
+    public static Activity activity;
+
+    public PermissionListener permissionListener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+            svc.checkPrepared();
+        }
+
+        @Override
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+        }
+    };
+
 
     private final Handler mHandler = new Handler() {
         @Override
@@ -70,19 +86,21 @@ public class MainBtmActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        //싱글톤
+        activity =this;
+
         if(communication == null) communication = new Communication(this,mHandler);
-        if(svc == null) {
-            svc = new RestAPIService(this,"서울","송파구");
-            svc.start();
-        }
         if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest").build();
 
-        if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-            }
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        TedPermission.with(this)
+                .setPermissionListener(permissionListener)
+                .setRationaleMessage("외부 대기정보를 가져오기 위해 위치 권한이 필요합니다")
+                .setDeniedMessage("[설정] > [권한] 에서 다시 권한을 허용할 수 있습니다.")
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
+                .check();
+
+        if(svc == null) {
+            svc = new RestAPIService(this);
         }
     }
 
@@ -97,13 +115,7 @@ public class MainBtmActivity extends AppCompatActivity {
                 }
                 break;
             case 1:
-                Geocoder mGeoCoder = new Geocoder(this);
-                try {
-                    List<Address> list = mGeoCoder.getFromLocation(14151601.4047335, 4509401.5071296, 1);
-                    int a = 3;
-                }catch(IOException e){
 
-                }
                 break;
         }
 
