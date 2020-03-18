@@ -14,8 +14,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -54,8 +52,12 @@ public class RestAPIService {
     public void setPreparedEvent(preparedListener listener){ mPreparedListener = listener; }
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-    private static final String api = "openapi.airkorea.or.kr";
-    private static final String key = "Ykpt%2Ffoyi49PDgJhtLVWnE1QB8R1t08idlq1Yieti3brksGN%2F7qszre1MeWYvX3uNXGx4V8PkUSzkeVU0g837Q%3D%3D";
+    private static final String airkorea_api = "openapi.airkorea.or.kr";
+    private static final String airkorea_key = "yourkey";
+
+    private static final String kakao_api = "dapi.kakao.com";
+    private static final String kakao_key = "yourkey";
+
     private OutdoorAir air=null;
     private static boolean isNetworkConnected=false;
     private Activity activity;
@@ -141,7 +143,7 @@ public class RestAPIService {
     private String makeOutdoorAirUrl(){
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
-                .authority(api)
+                .authority(airkorea_api)
                 .appendPath("openapi")
                 .appendPath("services")
                 .appendPath("rest")
@@ -152,7 +154,7 @@ public class RestAPIService {
                 .appendQueryParameter("ver","1.3")
                 .appendQueryParameter("_returnType","json");
         String url = builder.build().toString();
-        url += ("&ServiceKey=" + key);
+        url += ("&ServiceKey=" + airkorea_key);
         url += ("&stationName=" + stationName);
         url += ("&dataTerm=DAILY");
         return url;
@@ -161,7 +163,7 @@ public class RestAPIService {
     private String makeNearbyStationUrl(Pair<Double,Double> tmLocation){
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
-                .authority(api)
+                .authority(airkorea_api)
                 .appendPath("openapi")
                 .appendPath("services")
                 .appendPath("rest")
@@ -171,17 +173,17 @@ public class RestAPIService {
                 .appendQueryParameter("numOfRows","10")
                 .appendQueryParameter("_returnType","json");
         String url = builder.build().toString();
-        url += ("&ServiceKey=" + key);
+        url += ("&ServiceKey=" + airkorea_key);
         url += ("&tmX=" + tmLocation.first);
         url += ("&tmY=" + tmLocation.second);
 
         return url;
     }
 
-    public String makeTMLocationUrlTest(Double log, Double lat){
+    public String makeTMLocationUrl(Double log, Double lat){
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
-                .authority("dapi.kakao.com")
+                .authority(kakao_api)
                 .appendPath("v2")
                 .appendPath("local")
                 .appendPath("geo")
@@ -197,7 +199,7 @@ public class RestAPIService {
     private Pair<Double,Double> getTMLocation(){
         try {
             //checkNetwork();
-            String json=getJsonResultUsingKey(makeTMLocationUrlTest(locationFinder.getLongitude(),locationFinder.getLatitude() ));
+            String json=getJsonResult(makeTMLocationUrl(locationFinder.getLongitude(),locationFinder.getLatitude()),kakao_key);
             JsonParser jp = new JsonParser(json);
             return jp.getTMLocation();
         }catch(Exception e){
@@ -247,13 +249,13 @@ public class RestAPIService {
         }
     }
 
-    public String getJsonResultUsingKey(String url){
+    public String getJsonResult(String url, String Key){
         try {
             URL endpoint = new URL(url);
             HttpsURLConnection connection = (HttpsURLConnection) endpoint.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("Authorization","KakaoAK yourKey");
+            connection.setRequestProperty("Authorization","KakaoAK "+Key);
             if(connection.getResponseCode()!=200)
                 return null;
 
