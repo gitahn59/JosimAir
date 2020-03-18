@@ -2,6 +2,7 @@ package com.cbnu.josimair.ui.home;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.cbnu.josimair.Model.LocationFinder;
 import com.cbnu.josimair.Model.OutdoorAir;
 import com.cbnu.josimair.Model.RestAPIService;
 import com.cbnu.josimair.Model.Communication;
@@ -117,9 +119,12 @@ public class HomeFragment extends Fragment {
             @Override
             public void onPreparedEvent() {
                 try {
-                    List<Address> list = geoCoder.getFromLocation(37.5082, 127.1179, 1);
-                    svc.setLocation("서울","송파구");
-                    svc.start(); // 공기 정보 요청
+                    LocationFinder locationFinder = new LocationFinder(getActivity());
+                    if(locationFinder.isEnabled()) {
+                        List<Address> list = geoCoder.getFromLocation(locationFinder.getLatitude(), locationFinder.getLongitude(), 1);
+                        svc.setLocation("서울", "송파구");
+                        svc.start(); // 공기 정보 요청
+                    }
                 }catch(IOException e){
 
                 }
