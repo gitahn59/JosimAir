@@ -14,8 +14,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.net.ssl.HttpsURLConnection;
 
 
 public class RestAPIService {
@@ -52,22 +56,18 @@ public class RestAPIService {
 
     private static final String api = "openapi.airkorea.or.kr";
     private static final String key = "Ykpt%2Ffoyi49PDgJhtLVWnE1QB8R1t08idlq1Yieti3brksGN%2F7qszre1MeWYvX3uNXGx4V8PkUSzkeVU0g837Q%3D%3D";
-    private String city;
-    private String gu;
     private OutdoorAir air=null;
     private static boolean isNetworkConnected=false;
     private Activity activity;
     private Timer timer;
     private int period=3600000;
-
-    public void setLocation(String city, String gu){
-        this.city = city;
-        this.gu = gu;
-    }
+    private LocationFinder locationFinder;
+    private String stationName;
 
     public RestAPIService(Activity activity){
         this.activity=activity;
         this.air=null;
+        this.locationFinder = new LocationFinder(activity);
         setCheckNetworkState();
     }
 
@@ -146,34 +146,15 @@ public class RestAPIService {
                 .appendPath("services")
                 .appendPath("rest")
                 .appendPath("ArpltnInforInqireSvc")
-                .appendPath("getCtprvnRltmMesureDnsty")
+                .appendPath("getMsrstnAcctoRltmMesureDnsty")
                 .appendQueryParameter("pageNo","1")
-                .appendQueryParameter("numOfRows","50")
+                .appendQueryParameter("numOfRows","1")
                 .appendQueryParameter("ver","1.3")
                 .appendQueryParameter("_returnType","json");
         String url = builder.build().toString();
         url += ("&ServiceKey=" + key);
-        url += ("&sidoName=" + city);
-
-        return url;
-    }
-
-    private String makeTMLocationUrl(){
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
-                .authority(api)
-                .appendPath("openapi")
-                .appendPath("services")
-                .appendPath("rest")
-                .appendPath("MsrstnInfoInqireSvc")
-                .appendPath("getTMStdrCrdnt")
-                .appendQueryParameter("pageNo","1")
-                .appendQueryParameter("numOfRows","50")
-                .appendQueryParameter("_returnType","json");
-        String url = builder.build().toString();
-        url += ("&ServiceKey=" + key);
-        url += ("&umdName=" + gu);
-
+        url += ("&stationName=" + stationName);
+        url += ("&dataTerm=DAILY");
         return url;
     }
 
@@ -197,10 +178,26 @@ public class RestAPIService {
         return url;
     }
 
+    public String makeTMLocationUrlTest(Double log, Double lat){
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("dapi.kakao.com")
+                .appendPath("v2")
+                .appendPath("local")
+                .appendPath("geo")
+                .appendPath("transcoord.json")
+                .appendQueryParameter("x",log.toString())
+                .appendQueryParameter("y",lat.toString())
+                .appendQueryParameter("input_coord","WGS84")
+                .appendQueryParameter("output_coord","TM");
+        String url = builder.build().toString();
+        return url;
+    }
+
     private Pair<Double,Double> getTMLocation(){
         try {
             //checkNetwork();
-            String json=getJsonResult(makeTMLocationUrl());
+            String json=getJsonResultUsingKey(makeTMLocationUrlTest(locationFinder.getLongitude(),locationFinder.getLatitude() ));
             JsonParser jp = new JsonParser(json);
             return jp.getTMLocation();
         }catch(Exception e){
@@ -212,7 +209,7 @@ public class RestAPIService {
         try {
             String json=getJsonResult(makeNearbyStationUrl(tmLocation));
             JsonParser jp = new JsonParser(json);
-            this.gu = jp.getNearByStation();
+            this.stationName = jp.getNearByStation();
             return true;
         }catch(Exception e){
             return false;
@@ -223,7 +220,7 @@ public class RestAPIService {
         try {
             String json=getJsonResult(makeOutdoorAirUrl());
             JsonParser jp = new JsonParser(json);
-            this.air = jp.getOutdoor(this.city,this.gu);
+            this.air = jp.getOutdoor(this.stationName);
             mReceivedListener.onReceivedEvent(this.air);
         }
         catch(Exception e){
@@ -238,6 +235,27 @@ public class RestAPIService {
             connection.setRequestProperty("Accept", "application/json");
 
             if(connection.getResponseCode()!=200) return null;
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) response.append(inputLine);
+            in.close();
+            return response.toString();
+        }catch(Exception e) {
+            return null;
+        }
+    }
+
+    public String getJsonResultUsingKey(String url){
+        try {
+            URL endpoint = new URL(url);
+            HttpsURLConnection connection = (HttpsURLConnection) endpoint.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("Authorization","KakaoAK yourKey");
+            if(connection.getResponseCode()!=200)
+                return null;
 
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String inputLine;

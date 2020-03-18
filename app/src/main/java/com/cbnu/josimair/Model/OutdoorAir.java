@@ -4,24 +4,15 @@ public class OutdoorAir {
     private float value;
     private int quality;
 
-    public String getCity() {
-        return city;
+    public String getStation() {
+        return station;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setStation(String station) {
+        this.station = station;
     }
 
-    public String getGu() {
-        return gu;
-    }
-
-    public void setGu(String gu) {
-        this.gu = gu;
-    }
-
-    private String city;
-    private String gu;
+    private String station;
 
     public int getQuality() {
         return quality;
@@ -31,10 +22,9 @@ public class OutdoorAir {
         return value;
     }
 
-    public OutdoorAir(String city, String gu, float value, int quality) {
+    public OutdoorAir(String station, float value, int quality) {
         this.value = value;
         this.quality = quality;
-        this.city = city;
-        this.gu = gu;
+        this.station = station;
     }
 }

@@ -42,7 +42,7 @@ public class HomeViewModel extends ViewModel {
         if(air==null)
             quality.setText(R.string.network_error);
         else{
-            quality.setText(air.getGu() + " : " + air.getValue());
+            quality.setText(air.getStation() + " : " + air.getValue());
 
         }
     }

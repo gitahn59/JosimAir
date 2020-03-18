@@ -41,6 +41,7 @@ dependencies {
 
     //permission check
     implementation 'gun0912.ted:tedpermission:2.0.0'
+
 }
 
 repositories {

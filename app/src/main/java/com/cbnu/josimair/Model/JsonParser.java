@@ -16,7 +16,7 @@ public class JsonParser {
         this.json = json;
     }
 
-    public OutdoorAir getOutdoor(String city, String gu){
+    public OutdoorAir getOutdoor(String stationName){
         float value = -1;
         int quality = -1;
 
@@ -26,8 +26,6 @@ public class JsonParser {
             for(int i=0; i < jarray.length(); i++){
                 JSONObject jObject = jarray.getJSONObject(i);
                 String name = jObject.getString("stationName");
-                if(!name.equals(gu))
-                    continue;
                 try {
                     value = Float.parseFloat(jObject.getString("coValue"));
                 } catch (Exception e) {
@@ -46,7 +44,7 @@ public class JsonParser {
             if(value==-1)
                 return null;
             else
-                return new OutdoorAir(city,gu, value, quality);
+                return new OutdoorAir(stationName, value, quality);
         }
     }
 
@@ -56,11 +54,11 @@ public class JsonParser {
         Double second=0.0;
         try {
             JSONObject jsonObject = new JSONObject(json);
-            JSONArray jarray = jsonObject.getJSONArray("list");
+            JSONArray jarray = jsonObject.getJSONArray("documents");
             for(int i=0; i < jarray.length(); i++){
                 JSONObject jObject = jarray.getJSONObject(i);
-                first= Double.parseDouble(jObject.getString("tmX"));
-                second= Double.parseDouble(jObject.getString("tmY"));
+                first= Double.parseDouble(jObject.getString("x"));
+                second= Double.parseDouble(jObject.getString("y"));
                 break;
             }
         } catch (JSONException e) {

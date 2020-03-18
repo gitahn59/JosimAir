@@ -118,16 +118,7 @@ public class HomeFragment extends Fragment {
         svc.setPreparedEvent(new RestAPIService.preparedListener() {
             @Override
             public void onPreparedEvent() {
-                try {
-                    LocationFinder locationFinder = new LocationFinder(getActivity());
-                    if(locationFinder.isEnabled()) {
-                        List<Address> list = geoCoder.getFromLocation(locationFinder.getLatitude(), locationFinder.getLongitude(), 1);
-                        svc.setLocation("서울", "송파구");
-                        svc.start(); // 공기 정보 요청
-                    }
-                }catch(IOException e){
-
-                }
+                svc.start(); // 공기 정보 요청
             }
         });
     }
