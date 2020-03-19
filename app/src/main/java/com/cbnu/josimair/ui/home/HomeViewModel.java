@@ -40,7 +40,7 @@ public class HomeViewModel extends ViewModel {
 
     public void updateOutdoorAirInfo(TextView quality, OutdoorAir air){
         if(air==null)
-            quality.setText(R.string.network_error);
+            quality.setText(R.string.network_receiving);
         else{
             quality.setText(air.getStation() + " : " + air.getValue());
 

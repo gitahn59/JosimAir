@@ -2,12 +2,12 @@ package com.cbnu.josimair.Model;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkRequest;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.ResultReceiver;
 import android.util.Pair;
 
 import java.io.BufferedReader;
@@ -42,70 +42,28 @@ public class RestAPIService {
     public void setOnErrorOccurredEvent(ErrorOccurredListener listener){ mErrorOccurredListener = listener; }
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-    // error occurred event
-    ///////////////////////////////////////////////////////////////////////////////////////////
-    public interface preparedListener {
-        void onPreparedEvent();
-    }
-    private preparedListener mPreparedListener;
-
-    public void setPreparedEvent(preparedListener listener){ mPreparedListener = listener; }
-    ///////////////////////////////////////////////////////////////////////////////////////////
-
     private static final String airkorea_api = "openapi.airkorea.or.kr";
-    private static final String airkorea_key = "yourkey";
+    private static final String airkorea_key = "yourKey";
 
     private static final String kakao_api = "dapi.kakao.com";
-    private static final String kakao_key = "yourkey";
+    private static final String kakao_key = "yourKey";
 
     private OutdoorAir air=null;
-    private static boolean isNetworkConnected=false;
-    private Activity activity;
+    private Context context;
     private Timer timer;
     private int period=3600000;
-    private LocationFinder locationFinder;
     private String stationName;
+    private ResourceChecker checker;
+    private Location location;
 
-    public RestAPIService(Activity activity){
-        this.activity=activity;
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public RestAPIService(Activity context){
+        this.context = context;
         this.air=null;
-        this.locationFinder = new LocationFinder(activity);
-        setCheckNetworkState();
-    }
-
-    public void setCheckNetworkState(){
-        try {
-            ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Activity.CONNECTIVITY_SERVICE);
-            NetworkRequest.Builder builder = new NetworkRequest.Builder();
-            connectivityManager.registerNetworkCallback(builder.build(),new ConnectivityManager.NetworkCallback() {
-                        @Override
-                        public void onAvailable(Network network) {
-                            RestAPIService.isNetworkConnected = true; // Global Static Variable
-                            checkPrepared();
-                        }
-                        @Override
-                        public void onLost(Network network) {
-                            RestAPIService.isNetworkConnected = false; // Global Static Variable
-                        }
-                    }
-            );
-        }catch (Exception e){
-            RestAPIService.isNetworkConnected = false;
-        }
-    }
-
-    public void checkPrepared(){
-        if(isGranted() && RestAPIService.isNetworkConnected) {
-            if(mPreparedListener!=null)
-                mPreparedListener.onPreparedEvent();
-        }
-    }
-
-    public boolean isGranted() {
-        if(activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        return false;
+        this.checker = new ResourceChecker(context);
     }
 
     public OutdoorAir getAir() {
@@ -198,8 +156,7 @@ public class RestAPIService {
 
     private Pair<Double,Double> getTMLocation(){
         try {
-            //checkNetwork();
-            String json=getJsonResult(makeTMLocationUrl(locationFinder.getLongitude(),locationFinder.getLatitude()),kakao_key);
+            String json=getJsonResult(makeTMLocationUrl(location.getLongitude(),location.getLatitude()),kakao_key);
             JsonParser jp = new JsonParser(json);
             return jp.getTMLocation();
         }catch(Exception e){

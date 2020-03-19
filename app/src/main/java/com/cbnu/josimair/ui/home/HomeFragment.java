@@ -107,18 +107,10 @@ public class HomeFragment extends Fragment {
                updateOutdoorAirInfo();
             }
         });
-
         svc.setOnErrorOccurredEvent(new RestAPIService.ErrorOccurredListener() {
             @Override
             public void onErrorOccurredEvent() {
                 updateOutdoorAirInfo();
-            }
-        });
-
-        svc.setPreparedEvent(new RestAPIService.preparedListener() {
-            @Override
-            public void onPreparedEvent() {
-                svc.start(); // 공기 정보 요청
             }
         });
     }

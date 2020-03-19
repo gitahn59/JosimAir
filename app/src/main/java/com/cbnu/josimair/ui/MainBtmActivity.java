@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.cbnu.josimair.Model.LocationFinder;
 import com.cbnu.josimair.Model.RestAPIService;
 import com.cbnu.josimair.Model.Communication;
 import com.cbnu.josimair.Model.AppDatabase;
@@ -40,11 +41,12 @@ public class MainBtmActivity extends AppCompatActivity {
     public static RestAPIService svc = null;
     public static AppDatabase db = null;
     public static Activity activity;
+    public static LocationFinder locationFinder;
 
     public PermissionListener permissionListener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
-            svc.checkPrepared();
+            locationFinder.setLocation();
         }
 
         @Override
@@ -90,7 +92,7 @@ public class MainBtmActivity extends AppCompatActivity {
 
         if(communication == null) communication = new Communication(this,mHandler);
         if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest").build();
-
+        locationFinder = new LocationFinder(this);
 
         TedPermission.with(this)
                 .setPermissionListener(permissionListener)
