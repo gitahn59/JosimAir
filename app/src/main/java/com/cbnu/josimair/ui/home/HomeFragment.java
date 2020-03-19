@@ -37,7 +37,6 @@ public class HomeFragment extends Fragment {
     private Button locationBtn;
     Geocoder geoCoder;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -120,7 +119,7 @@ public class HomeFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,svc.getAir());
+                    homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,MainBtmActivity.outdoorAir);
                 }
             });
         }catch(Exception e){

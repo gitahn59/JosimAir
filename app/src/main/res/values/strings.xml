@@ -52,6 +52,7 @@
 
     <!-- Network State -->
     <string name = "network_error">인터넷 상태를 확인하세요</string>
+    <string name = "gps_error">위치정보를 켜주세요</string>
     <string name = "network_receiving">수신중입니다</string>
 
 

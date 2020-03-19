@@ -6,15 +6,15 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
 import com.cbnu.josimair.Model.LocationFinder;
+import com.cbnu.josimair.Model.OutdoorAir;
+import com.cbnu.josimair.Model.ResourceChecker;
 import com.cbnu.josimair.Model.RestAPIService;
 import com.cbnu.josimair.Model.Communication;
 import com.cbnu.josimair.Model.AppDatabase;
@@ -31,22 +31,25 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.room.Room;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainBtmActivity extends AppCompatActivity {
 
     public static Communication communication = null;
     public static RestAPIService svc = null;
     public static AppDatabase db = null;
-    public static Activity activity;
+
     public static LocationFinder locationFinder;
+    public static ResourceChecker resourceChecker;
+    public static OutdoorAir outdoorAir;
+
+    public Timer airUpdateTimer;
 
     public PermissionListener permissionListener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
-            locationFinder.setLocation();
         }
 
         @Override
@@ -88,22 +91,20 @@ public class MainBtmActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        activity =this;
-
         if(communication == null) communication = new Communication(this,mHandler);
         if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest").build();
         locationFinder = new LocationFinder(this);
+        resourceChecker = new ResourceChecker(this);
+        outdoorAir = OutdoorAir.getInstance();
+        svc = new RestAPIService(this);
 
         TedPermission.with(this)
-                .setPermissionListener(permissionListener)
-                .setRationaleMessage("외부 대기정보를 가져오기 위해 위치 권한이 필요합니다")
-                .setDeniedMessage("[설정] > [권한] 에서 다시 권한을 허용할 수 있습니다.")
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
-                .check();
-
-        if(svc == null) {
-            svc = new RestAPIService(this);
-        }
+            .setPermissionListener(permissionListener)
+            .setRationaleMessage("외부 대기정보를 가져오기 위해 위치 권한이 필요합니다")
+            .setDeniedMessage("[설정] > [권한] 에서 다시 권한을 허용할 수 있습니다.")
+            .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
+            .check();
+        setOpeningTimerTask();
     }
 
     @Override
@@ -136,4 +137,51 @@ public class MainBtmActivity extends AppCompatActivity {
         communication.end();
         finish();
     }
+
+    private void setOpeningTimerTask(){
+        airUpdateTimer = new Timer();
+        final TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                      @Override
+                      public void run() {
+                          if(resourceChecker.isNetworkEnable() && locationFinder.isEnabled()){
+                              Location loc = locationFinder.getLocation();
+                              if(loc==null) return;
+                              svc.setLocation(loc);
+                              svc.start();
+                              airUpdateTimer.cancel();
+                              setUpdateTask();
+                          }
+                      }
+                  }
+                );
+            }
+        };
+        airUpdateTimer.schedule(timerTask,0,1000);
+    }
+
+    private void setUpdateTask(){
+        airUpdateTimer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(resourceChecker.isNetworkEnable() && locationFinder.isEnabled()){
+                            svc.setLocation(locationFinder.getLocation());
+                            svc.start();
+                        }else{
+                            airUpdateTimer.cancel();
+                            setOpeningTimerTask();
+                        }
+                    }
+                });
+            }
+        };
+        airUpdateTimer.schedule(timerTask,30*60*1000,30*60*1000);
+    }
+
 }
