@@ -3,6 +3,8 @@ package com.cbnu.josimair.Model;
 import android.location.Geocoder;
 import android.util.Pair;
 
+import com.cbnu.josimair.ui.MainBtmActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +18,7 @@ public class JsonParser {
         this.json = json;
     }
 
-    public OutdoorAir getOutdoor(String stationName){
+    public boolean updateOutdoorAir(String stationName){
         float value = -1;
         int quality = -1;
 
@@ -42,9 +44,11 @@ public class JsonParser {
             e.printStackTrace();
         } finally{
             if(value==-1)
-                return null;
-            else
-                return new OutdoorAir(stationName, value, quality);
+                return false;
+            else {
+                MainBtmActivity.outdoorAir.setValues(stationName, value, quality);
+                return true;
+            }
         }
     }
 

@@ -12,6 +12,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
 
@@ -36,6 +38,7 @@ public class LocationFinder extends Service implements LocationListener {
     private final Context context;
 
     public boolean isEnabled() {
+        locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
         if(context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER))
                 return true;
@@ -47,20 +50,25 @@ public class LocationFinder extends Service implements LocationListener {
     private LocationManager locationManager;
     public LocationFinder(Context context) {
         this.context = context;
-        locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
     }
 
-    public void setLocation(){
+    public Location getLocation(){
         try {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 60, 10, this);
-            }
-            else if (locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER)) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 60, 10, this);
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if(location!=null) return location;
+            }
+
+            if (locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER)) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 60, 10, this);
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if(location!=null) return location;
             }
         } catch (SecurityException se) {
-
+            return null;
         }
+        return null;
     }
 
     @Nullable
@@ -71,8 +79,7 @@ public class LocationFinder extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        MainBtmActivity.svc.setLocation(location);
-        MainBtmActivity.svc.start();
+
     }
 
     @Override

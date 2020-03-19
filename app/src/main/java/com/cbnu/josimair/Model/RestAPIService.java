@@ -1,14 +1,13 @@
 package com.cbnu.josimair.Model;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.ResultReceiver;
 import android.util.Pair;
+
+import com.cbnu.josimair.ui.MainBtmActivity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -48,10 +47,7 @@ public class RestAPIService {
     private static final String kakao_api = "dapi.kakao.com";
     private static final String kakao_key = "yourKey";
 
-    private OutdoorAir air=null;
     private Context context;
-    private Timer timer;
-    private int period=3600000;
     private String stationName;
     private ResourceChecker checker;
     private Location location;
@@ -62,26 +58,10 @@ public class RestAPIService {
 
     public RestAPIService(Activity context){
         this.context = context;
-        this.air=null;
         this.checker = new ResourceChecker(context);
     }
 
-    public OutdoorAir getAir() {
-        return air;
-    }
-
     public void start(){
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                task();
-            }
-        };
-        timer = new Timer();
-        timer.schedule(timerTask,0,period);
-    }
-
-    public void task(){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -89,9 +69,9 @@ public class RestAPIService {
                 if(tmLocation!=null) {
                     if (getNearByStationInfo(tmLocation)){
                         getOutdoorAir();
+                        mReceivedListener.onReceivedEvent(MainBtmActivity.outdoorAir);
                     }
                 }else{
-                    timer.cancel();
                     mErrorOccurredListener.onErrorOccurredEvent();
                 }
             }
@@ -179,8 +159,9 @@ public class RestAPIService {
         try {
             String json=getJsonResult(makeOutdoorAirUrl());
             JsonParser jp = new JsonParser(json);
-            this.air = jp.getOutdoor(this.stationName);
-            mReceivedListener.onReceivedEvent(this.air);
+            if(!jp.updateOutdoorAir(this.stationName)){
+                mErrorOccurredListener.onErrorOccurredEvent();
+            }
         }
         catch(Exception e){
             mErrorOccurredListener.onErrorOccurredEvent();
