@@ -5,10 +5,16 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.cbnu.josimair.Model.IndoorAir;
 
@@ -26,6 +32,7 @@ public class Communication {
     private IndoorAir receivedAir;
     private AsyncTask task;
     private boolean isEnded;
+    private Vibrator vibrator;
 
     public final static int REQUEST_CODE_ENABLE = 2001;
     public final static int RESULT_CODE_BTLIST = 2002;
@@ -51,7 +58,7 @@ public class Communication {
         mActivity = ac;
         mHandler = h;
         btAdapter = BluetoothAdapter.getDefaultAdapter();
-
+        vibrator = (Vibrator)mActivity.getSystemService(Context.VIBRATOR_SERVICE);
         task = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
@@ -101,11 +108,20 @@ public class Communication {
         task.execute(new Runnable() {
             @Override
             public void run() {
+                long num = 0;
                 do {
                     try {
                         receivedAir = new IndoorAir((float) Math.random() * 15);
                         //connected event occurred
                         mReceivedListener.onReceivedEvent();
+                        if(num%5 == 0){
+                            AudioManager audioManager = (AudioManager)mActivity.getSystemService(Context.AUDIO_SERVICE);
+                            //vibrator.vibrate(VibrationEffect.createOneShot(1000,VibrationEffect.DEFAULT_AMPLITUDE));
+                            if(audioManager.getRingerMode()!=AudioManager.RINGER_MODE_SILENT){
+                                vibrator.vibrate(1000);
+                            }
+                        }
+                        num++;
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
