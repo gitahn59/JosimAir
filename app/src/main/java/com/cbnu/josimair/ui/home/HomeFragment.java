@@ -1,8 +1,6 @@
 package com.cbnu.josimair.ui.home;
 
-import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,15 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.cbnu.josimair.Model.LocationFinder;
 import com.cbnu.josimair.Model.OutdoorAir;
 import com.cbnu.josimair.Model.RestAPIService;
 import com.cbnu.josimair.Model.Communication;
-import com.cbnu.josimair.ui.MainBtmActivity;
+import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
-
-import java.io.IOException;
-import java.util.List;
 
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
@@ -40,8 +34,9 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        communication = MainBtmActivity.communication;
-        svc = MainBtmActivity.svc;
+        communication = MainActivity.communication;
+        svc = MainActivity.svc;
+
 
         btBtn = (Button) root.findViewById(R.id.btBtn);
         locationBtn = (Button) root.findViewById(R.id.locationBtn);
@@ -119,7 +114,7 @@ public class HomeFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView,MainBtmActivity.outdoorAir);
+                    homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView, MainActivity.outdoorAir);
                 }
             });
         }catch(Exception e){

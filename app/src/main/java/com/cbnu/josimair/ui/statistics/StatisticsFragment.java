@@ -1,6 +1,5 @@
 package com.cbnu.josimair.ui.statistics;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.cbnu.josimair.Model.Communication;
 import com.cbnu.josimair.Model.IndoorAir;
-import com.cbnu.josimair.ui.MainBtmActivity;
+import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 import com.cbnu.josimair.Model.AppDatabase;
 import com.github.mikephil.charting.charts.LineChart;
@@ -41,7 +40,7 @@ public class StatisticsFragment extends Fragment {
                 ViewModelProviders.of(this).get(StatisticsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_statistics, container, false);
 
-        communication = MainBtmActivity.communication;
+        communication = MainActivity.communication;
         communication.setReceivedCallback(new Communication.ReceivedListener() {
             @Override
             public void onReceivedEvent() {
@@ -54,7 +53,7 @@ public class StatisticsFragment extends Fragment {
         deleteBtn = (Button) root.findViewById(R.id.deleteBtn);
         lineChart = (LineChart)root.findViewById(R.id.line_chart);
 
-        db = MainBtmActivity.db;
+        db = MainActivity.db;
 
         setCallback();
         //setStatisticsViews();

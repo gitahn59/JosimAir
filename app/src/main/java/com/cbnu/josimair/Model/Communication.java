@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -15,8 +16,10 @@ import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.preference.PreferenceManager;
 
 import com.cbnu.josimair.Model.IndoorAir;
+import com.cbnu.josimair.R;
 
 import java.io.IOException;
 import java.util.Set;
@@ -118,7 +121,10 @@ public class Communication {
                             AudioManager audioManager = (AudioManager)mActivity.getSystemService(Context.AUDIO_SERVICE);
                             //vibrator.vibrate(VibrationEffect.createOneShot(1000,VibrationEffect.DEFAULT_AMPLITUDE));
                             if(audioManager.getRingerMode()!=AudioManager.RINGER_MODE_SILENT){
-                                vibrator.vibrate(1000);
+                                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
+                                if(sp.getBoolean("진동",false)){
+                                    vibrator.vibrate(1000);
+                                }
                             }
                         }
                         num++;

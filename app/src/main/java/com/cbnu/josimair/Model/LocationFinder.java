@@ -1,8 +1,6 @@
 package com.cbnu.josimair.Model;
 
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -12,16 +10,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Looper;
-import android.provider.Settings;
-import android.util.Log;
-import android.util.Pair;
 
 import androidx.annotation.Nullable;
-
-import com.cbnu.josimair.ui.MainBtmActivity;
-
-import java.util.List;
 
 public class LocationFinder extends Service implements LocationListener {
     // error occurred event

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="알림">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/setting_vibrate"
+            android:summary="공기 상태에 따라 진동으로 신호합니다."
+            android:title="@string/setting_vibrate"/>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/setting_sound"
+            android:summary="공기 상태에 따라 소리로 신호합니다."
+            android:title="@string/setting_sound"/>
+    </PreferenceCategory>
+</PreferenceScreen>
+

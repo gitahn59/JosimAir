@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.cbnu.josimair.Model.LocationFinder;
 import com.cbnu.josimair.Model.OutdoorAir;
@@ -35,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainBtmActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     public static Communication communication = null;
     public static RestAPIService svc = null;
@@ -138,6 +140,32 @@ public class MainBtmActivity extends AppCompatActivity {
         finish();
     }
 
+    /*
+    메뉴를 액션 바에 추가
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+
+    /*
+    메뉴가 선택 되었을 떄의 callback
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.setting_btn:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                this.startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void setOpeningTimerTask(){
         airUpdateTimer = new Timer();
         final TimerTask timerTask = new TimerTask() {
@@ -183,5 +211,4 @@ public class MainBtmActivity extends AppCompatActivity {
         };
         airUpdateTimer.schedule(timerTask,30*60*1000,30*60*1000);
     }
-
 }

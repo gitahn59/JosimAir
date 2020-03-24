@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.OutdoorAir;
 import com.cbnu.josimair.R;
-import com.cbnu.josimair.ui.MainBtmActivity;
+import com.cbnu.josimair.ui.MainActivity;
 
 public class HomeViewModel extends ViewModel {
 
@@ -42,9 +42,9 @@ public class HomeViewModel extends ViewModel {
     public void updateOutdoorAirInfo(TextView quality, OutdoorAir air){
         if(air.getStation()==null) {
             quality.setText(R.string.network_receiving);
-            if(!MainBtmActivity.resourceChecker.isNetworkEnable()){
+            if(!MainActivity.resourceChecker.isNetworkEnable()){
                 quality.setText(R.string.network_error);
-            }else if(!MainBtmActivity.locationFinder.isEnabled()){
+            }else if(!MainActivity.locationFinder.isEnabled()){
                 quality.setText(R.string.gps_error);
             }
         }

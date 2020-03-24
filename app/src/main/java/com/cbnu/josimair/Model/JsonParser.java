@@ -1,15 +1,12 @@
 package com.cbnu.josimair.Model;
 
-import android.location.Geocoder;
 import android.util.Pair;
 
-import com.cbnu.josimair.ui.MainBtmActivity;
+import com.cbnu.josimair.ui.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Locale;
 
 public class JsonParser {
     String json;
@@ -46,7 +43,7 @@ public class JsonParser {
             if(value==-1)
                 return false;
             else {
-                MainBtmActivity.outdoorAir.setValues(stationName, value, quality);
+                MainActivity.outdoorAir.setValues(stationName, value, quality);
                 return true;
             }
         }

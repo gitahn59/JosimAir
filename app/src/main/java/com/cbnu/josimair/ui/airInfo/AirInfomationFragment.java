@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.cbnu.josimair.Model.Communication;
-import com.cbnu.josimair.ui.MainBtmActivity;
+import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 
 public class AirInfomationFragment extends Fragment {
@@ -28,7 +28,7 @@ public class AirInfomationFragment extends Fragment {
                 ViewModelProviders.of(this).get(AirInformationViewModel.class);
         View root = inflater.inflate(R.layout.fragment_airinformation, container, false);
 
-        communication = MainBtmActivity.communication;
+        communication = MainActivity.communication;
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
 

@@ -1,14 +1,10 @@
 package com.cbnu.josimair.Model;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkRequest;
-
-import com.cbnu.josimair.ui.MainBtmActivity;
 
 public class ResourceChecker {
     private Context context;
