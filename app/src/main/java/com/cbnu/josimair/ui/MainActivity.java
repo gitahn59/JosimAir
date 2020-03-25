@@ -149,16 +149,20 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
     /*
     메뉴가 선택 되었을 떄의 callback
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.setting_btn:
-                Intent intent = new Intent(this, SettingsActivity.class);
+                intent = new Intent(this, SettingsActivity.class);
+                this.startActivity(intent);
+                return true;
+            case R.id.management_btn:
+                intent = new Intent(this, ManagementActivity.class);
                 this.startActivity(intent);
                 return true;
             default:

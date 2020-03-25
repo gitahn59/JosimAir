@@ -17,18 +17,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".ui.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+
         <activity
             android:name=".ui.MainActivity"
-            android:label="@string/title_activity_main_btm">
+            android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
+        <activity android:name=".ui.ManagementActivity">
+        </activity>
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+
         <activity
             android:name=".ui.bluetooth.DeviceListActivity"
             android:theme="@android:style/Theme.Holo.Light.Dialog" />

@@ -9,6 +9,7 @@
     <string name="menu_setting">설정</string>
     <string name="setting_vibrate">진동</string>
     <string name="setting_sound">소리</string>
+    <string name="menu_management">통계 관리</string>
 
     <!--  BluetoothChat -->
     <string name="send">Send</string>
@@ -33,7 +34,7 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
-    <string name="title_activity_main_btm">JosimAir</string>
+    <string name="title_activity_main">JosimAir</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
