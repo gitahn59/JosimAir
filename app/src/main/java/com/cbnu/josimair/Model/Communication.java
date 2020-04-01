@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -117,13 +118,18 @@ public class Communication {
                         receivedAir = new IndoorAir((float) Math.random() * 15);
                         //connected event occurred
                         mReceivedListener.onReceivedEvent();
-                        if(num%5 == 0){
-                            AudioManager audioManager = (AudioManager)mActivity.getSystemService(Context.AUDIO_SERVICE);
+
+                        if (num % 5 == 0) {
+                            AudioManager audioManager = (AudioManager) mActivity.getSystemService(Context.AUDIO_SERVICE);
                             //vibrator.vibrate(VibrationEffect.createOneShot(1000,VibrationEffect.DEFAULT_AMPLITUDE));
-                            if(audioManager.getRingerMode()!=AudioManager.RINGER_MODE_SILENT){
+                            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
                                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mActivity);
-                                if(sp.getBoolean("진동",false)){
-                                    vibrator.vibrate(1000);
+                                if (sp.getBoolean("진동", false)) {
+                                    if(Build.VERSION.SDK_INT>=26) {
+                                        vibrator.vibrate(VibrationEffect.createOneShot(1000,VibrationEffect.DEFAULT_AMPLITUDE));
+                                    }else {
+                                        vibrator.vibrate(1000);
+                                    }
                                 }
                             }
                         }
