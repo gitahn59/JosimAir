@@ -65,8 +65,14 @@ public class StatisticsFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        IndoorAir ia = new IndoorAir((float) Math.random() * 15);
-                        db.indoorAirDao().insertAll(ia);
+                        IndoorAir [] airs = new IndoorAir [7];
+
+                        for(int i=0; i<7; i++){
+                            airs[i] = new IndoorAir((float) Math.random() * 15);
+                            Date d = new Date(System.currentTimeMillis()-86400000*i);
+                            airs[i].setTime(d);
+                        }
+                        db.indoorAirDao().insertAll(airs);
                     }
                 }).start();
             }
