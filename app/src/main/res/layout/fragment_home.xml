@@ -3,17 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/back"
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="0dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/airTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/Home_layout_air"
+                android:background="#cee7f5"
+                />
+
+            <Button
+                android:id="@+id/btBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_bluetooth"
+                android:textColor="#0c6796"
+                android:layout_gravity="right"
+                android:text="@string/bluetooth_connect_btn" />
 
             <TextView
                 android:id="@+id/airInfoTextView"
@@ -29,25 +52,33 @@
                 android:gravity="center"
                 android:text="@string/empty_string" />
 
-            <Button
-                android:id="@+id/btBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/bluetooth_connect_btn" />
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/locationBtn"
+            <TextView
+                android:id="@+id/outdoorTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:gravity="center"
+                android:text="@string/Home_layout_outdoor"
+                android:background="#cee7f5"
+                />
+
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="right"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:id="@+id/locationBtn"
+                android:padding="0dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_refresh"/>
 
             <TextView
                 android:id="@+id/outdoorAirInfoTextView"
@@ -65,11 +96,21 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/statisticsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/Home_layout_statistics"
+            android:background="#cee7f5"
+            />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
 
             <TextView
                 android:id="@+id/statisticsTextView"

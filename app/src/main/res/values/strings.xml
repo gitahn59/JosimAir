@@ -39,6 +39,11 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
+    <!-- Layout name list -->
+    <string name="Home_layout_air">현재 공기상태</string>
+    <string name="Home_layout_statistics">통계 그래프</string>
+    <string name="Home_layout_outdoor">실외 공기상태</string>
+
     <!-- Home Fragment -->
     <string name="bluetooth_connect_btn">블루투스 연결</string>
     <string name="bluetooth_enabled_btn">블루투스 사용 가능</string>

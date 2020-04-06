@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/back"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,6 +29,7 @@
                 android:id="@+id/updateBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/statistics_button"
                 android:text="@string/btn_update" />
 
             <com.github.mikephil.charting.charts.LineChart
@@ -34,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="16dp"
+                android:background="#ffffff"
                 android:gravity="center_vertical">
 
             </com.github.mikephil.charting.charts.LineChart>
