@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,7 @@ public class HomeFragment extends Fragment {
     private TextView outdoorAirQualityTextView;
 
     private Button btBtn;
-    private Button locationBtn;
+    private ImageButton locationBtn;
     Geocoder geoCoder;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class HomeFragment extends Fragment {
 
 
         btBtn = (Button) root.findViewById(R.id.btBtn);
-        locationBtn = (Button) root.findViewById(R.id.locationBtn);
+        locationBtn = (ImageButton) root.findViewById(R.id.locationBtn);
 
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
