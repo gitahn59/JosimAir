@@ -69,17 +69,6 @@
                 android:background="#cee7f5"
                 />
 
-            <ImageButton
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="right"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:id="@+id/locationBtn"
-                android:padding="0dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/ic_refresh"/>
-
             <TextView
                 android:id="@+id/outdoorAirInfoTextView"
                 android:layout_width="match_parent"
@@ -96,28 +85,34 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/statisticsTitle"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/Home_layout_statistics"
-            android:background="#cee7f5"
-            />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/statisticsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#cee7f5"
+                android:gravity="center"
+                android:text="@string/Home_layout_statistics" />
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/hourChart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:background="#ffffff"
+                android:gravity="center_vertical">
+
+            </com.github.mikephil.charting.charts.LineChart>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            >
-
-            <TextView
-                android:id="@+id/statisticsTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/empty_string" />
-
+            android:orientation="vertical">
         </LinearLayout>
 
     </LinearLayout>

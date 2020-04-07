@@ -1,20 +1,23 @@
 package com.cbnu.josimair.Model;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.util.Date;
 
 @Entity
 public class IndoorAir {
     @PrimaryKey
-    private Date time;
-
+    @TypeConverters({Converters.class})
+    @ColumnInfo(name = "time")
+    @NonNull
+    public Date time;
     public Date getTime() {
         return time;
     }
-
     public void setTime(Date time) {
         this.time = time;
     }
@@ -52,6 +55,4 @@ public class IndoorAir {
             quality = 3;
         }
     }
-
-
 }

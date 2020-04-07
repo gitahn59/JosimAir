@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.LocationFinder;
 import com.cbnu.josimair.Model.OutdoorAir;
 import com.cbnu.josimair.Model.ResourceChecker;
@@ -34,6 +35,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.room.Room;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         if(communication == null) communication = new Communication(this,mHandler);
-        if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest").build();
+        if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest2").build();
         locationFinder = new LocationFinder(this);
         resourceChecker = new ResourceChecker(this);
         outdoorAir = OutdoorAir.getInstance();
@@ -164,6 +166,20 @@ public class MainActivity extends AppCompatActivity {
             case R.id.management_btn:
                 intent = new Intent(this, ManagementActivity.class);
                 this.startActivity(intent);
+                return true;
+            case R.id.action_add_btn:
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        IndoorAir[] airs = new IndoorAir [7];
+                        for(int i=0; i<7; i++){
+                            airs[i] = new IndoorAir((float)Math.random() * 15);
+                            Date d = new Date(System.currentTimeMillis()-86400000*(i+1));
+                            airs[i].setTime(d);
+                        }
+                        db.indoorAirDao().insertAll(airs);
+                    }
+                }).start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

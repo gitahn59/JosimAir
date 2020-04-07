@@ -161,7 +161,7 @@ public class ManagementActivity extends AppCompatActivity {
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                Calendar temp = (Calendar)start.clone();
+                Calendar temp = (Calendar)end.clone();
                 temp.set(Calendar.HOUR_OF_DAY,hourOfDay);
                 temp.set(Calendar.MINUTE,minute);
                 if(temp.compareTo(end) > 0){

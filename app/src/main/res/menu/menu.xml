@@ -10,9 +10,9 @@
         android:title="@string/menu_management"
         app:showAsAction="never" />
 
-    <!--
-    <item android:id="@+id/action_btn3"
-        android:title="버튼3"
+
+    <item android:id="@+id/action_add_btn"
+        android:title="통계데이터추가"
         app:showAsAction="never"/>
-        -->
+
 </menu>

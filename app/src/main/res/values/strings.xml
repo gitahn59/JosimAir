@@ -41,13 +41,16 @@
 
     <!-- Layout name list -->
     <string name="Home_layout_air">현재 공기상태</string>
-    <string name="Home_layout_statistics">통계 그래프</string>
+    <string name="Home_layout_statistics">시간별</string>
     <string name="Home_layout_outdoor">실외 공기상태</string>
 
     <!-- Home Fragment -->
     <string name="bluetooth_connect_btn">블루투스 연결</string>
     <string name="bluetooth_enabled_btn">블루투스 사용 가능</string>
 
+    <!-- Statisics Fragment -->
+    <string name="dayChartText">일별 통계</string>
+    <string name="weekChartText">주별 통계</string>
 
     <!-- air quality -->
     <string name="air_quality_good">지금 공기는 좋음!</string>

@@ -1,5 +1,6 @@
 package com.cbnu.josimair.ui.statistics;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +15,13 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.cbnu.josimair.Model.Communication;
 import com.cbnu.josimair.Model.IndoorAir;
+import com.cbnu.josimair.Model.IndoorAirGroup;
 import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 import com.cbnu.josimair.Model.AppDatabase;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -27,11 +31,9 @@ public class StatisticsFragment extends Fragment {
 
     private StatisticsViewModel statisticsViewModel;
     private Communication communication;
-    AppDatabase db;
-
-    private TextView statisticsTextView;
-    private Button updateBtn;
-    LineChart lineChart;
+    private AppDatabase db;
+    private LineChart dayChart;
+    private LineChart weekChart;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class StatisticsFragment extends Fragment {
                 ViewModelProviders.of(this).get(StatisticsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_statistics, container, false);
 
+        db = MainActivity.db;
         communication = MainActivity.communication;
         communication.setReceivedCallback(new Communication.ReceivedListener() {
             @Override
@@ -47,67 +50,50 @@ public class StatisticsFragment extends Fragment {
             }
         });
 
-        statisticsTextView = (TextView)root.findViewById(R.id.statisticsTextView);
-        updateBtn = (Button) root.findViewById(R.id.updateBtn);
-        lineChart = (LineChart)root.findViewById(R.id.line_chart);
+        dayChart = (LineChart)root.findViewById(R.id.dayChart);
+        setChartAttribute(dayChart);
+        weekChart = (LineChart)root.findViewById(R.id.weekChart);
+        setChartAttribute(weekChart);
 
-        db = MainActivity.db;
-
-        setCallback();
-        //setStatisticsViews();
-        drawChart();
+        drawDayChart();
+        drawWeekChart();
         return root;
     }
 
-    public void setCallback(){
-        updateBtn.setOnClickListener(new Button.OnClickListener(){
-            public void onClick(View v){
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        IndoorAir [] airs = new IndoorAir [7];
+    public void setChartAttribute(LineChart chart){
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextColor(Color.BLACK);
+        xAxis.enableGridDashedLine(8, 24, 0);
 
-                        for(int i=0; i<7; i++){
-                            airs[i] = new IndoorAir((float) Math.random() * 15);
-                            Date d = new Date(System.currentTimeMillis()-86400000*i);
-                            airs[i].setTime(d);
-                        }
-                        db.indoorAirDao().insertAll(airs);
-                    }
-                }).start();
-            }
-        });
+        YAxis yLAxis = chart.getAxisLeft();
+        yLAxis.setTextColor(Color.BLACK);
+
+        YAxis yRAxis = chart.getAxisRight();
+        yRAxis.setDrawLabels(false);
+        yRAxis.setDrawAxisLine(false);
+        yRAxis.setDrawGridLines(false);
+
+        chart.setDoubleTapToZoomEnabled(false);
+        chart.setDrawGridBackground(false);
+        chart.setDescription(null);
     }
 
-    public void setStatisticsViews(){
-         new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final List<IndoorAir> li = db.indoorAirDao().getAll();
-                try {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            statisticsViewModel.updateStatistics(statisticsTextView,li);
-                        }
-                    });
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    public void drawChart(){
+    public void drawDayChart(){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final List<IndoorAir> li = db.indoorAirDao().getAll();
+                Calendar to = Calendar.getInstance();
+                to.add(Calendar.DATE,-1);
+                to.set(Calendar.HOUR_OF_DAY,23);
+                to.set(Calendar.MINUTE,59);
+                to.set(Calendar.SECOND,59);
+                final List<IndoorAirGroup> li = db.indoorAirDao().getGroupByDayBetweenDates(to.getTime());
                 try {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            statisticsViewModel.updateStatistics(lineChart,li);
+                            statisticsViewModel.updateDayChart(dayChart,li);
                         }
                     });
                 }catch(Exception e){
@@ -115,7 +101,26 @@ public class StatisticsFragment extends Fragment {
                 }
             }
         }).start();
-
-
     }
+
+    public void drawWeekChart(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Calendar to = Calendar.getInstance();
+                final List<IndoorAirGroup> li = db.indoorAirDao().getGroupByWeekBetweenDates(to.getTime());
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            statisticsViewModel.updateWeekChart(weekChart,li);
+                        }
+                    });
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 }

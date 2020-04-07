@@ -19,21 +19,14 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/statisticsTextView"
+                android:id="@+id/dayTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/empty_string" />
-
-            <Button
-                android:id="@+id/updateBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/statistics_button"
-                android:text="@string/btn_update" />
+                android:text="@string/dayChartText" />
 
             <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/line_chart"
+                android:id="@+id/dayChart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="16dp"
@@ -41,7 +34,30 @@
                 android:gravity="center_vertical">
 
             </com.github.mikephil.charting.charts.LineChart>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/weekTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/weekChartText" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/weekChart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:background="#ffffff"
+                android:gravity="center_vertical">
+
+            </com.github.mikephil.charting.charts.LineChart>
         </LinearLayout>
 
         <LinearLayout

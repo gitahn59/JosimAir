@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.cbnu.josimair.Model.Converters;
 import com.cbnu.josimair.Model.IndoorAir;
+import com.cbnu.josimair.Model.IndoorAirGroup;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -38,74 +39,52 @@ public class StatisticsViewModel extends ViewModel {
         return mText;
     }
 
-    public void updateStatistics(TextView statistics, List<IndoorAir> airs){
-        String info="";
-        for(IndoorAir air : airs){
-            info +=(air.getTime() +" : " + air.getValue() + " : " + air.getQuality() +"\n");
-        }
-        statistics.setText(info);
-    }
-
-    void setLineChartAttribute(LineChart lineChart){
-
-    }
-
-
-
-    public void updateStatistics(LineChart lineChart, List<IndoorAir> airs){
-        ArrayList<Entry> entries = new ArrayList<>();
-        int cnt=0;
-        for(int i=0;i<7;i++){
-            if(airs.size()==i) break;
-            entries.add(new Entry(airs.get(i).getQuality(),cnt++));
-        }
-
-        LineDataSet lineDataSet = new LineDataSet(entries, "속성명1");
+    public void setLineDataSetAttribute(LineDataSet lineDataSet){
         lineDataSet.setLineWidth(2);
-        //lineDataSet.setCircleRadius(6);
         lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
-        //lineDataSet.setCircleColorHole(Color.BLUE);
         lineDataSet.setColor(Color.parseColor("#FFA1B4DC"));
         lineDataSet.setDrawCircleHole(true);
         lineDataSet.setDrawCircles(true);
         lineDataSet.setDrawHorizontalHighlightIndicator(false);
         lineDataSet.setDrawHighlightIndicators(false);
         lineDataSet.setDrawValues(false);
+    }
+
+    public void updateDayChart(LineChart lineChart, List<IndoorAirGroup> airs){
+        ArrayList<Entry> entries = new ArrayList<>();
+        for(int i=0;i<airs.size();i++){
+            entries.add(new Entry(airs.get(i).getValue(),i));
+        }
+
+        LineDataSet lineDataSet = new LineDataSet(entries, "평균값");
+        setLineDataSetAttribute(lineDataSet);
 
         ArrayList<String> labels = new ArrayList<String>();
-        Calendar calendar = Calendar.getInstance();
-        String [] days = {" ","일","월","화","수","목","금","토"};
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        for(int i = day; i<=7;i++){
-            labels.add(days[i]);
-        }
-        for(int i= 1; i<day;i++){
-            labels.add(days[i]);
+        for(int i=0;i<airs.size();i++){
+            labels.add(airs.get(i).getDay());
         }
 
         LineData lineData = new LineData(labels, lineDataSet);
         lineChart.setData(lineData);
+        lineChart.invalidate();
+    }
 
-        XAxis xAxis = lineChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setTextColor(Color.BLACK);
-        xAxis.enableGridDashedLine(8, 24, 0);
+    public void updateWeekChart(LineChart lineChart, List<IndoorAirGroup> airs){
+        ArrayList<Entry> entries = new ArrayList<>();
+        for(int i=0;i<airs.size();i++){
+            entries.add(new Entry(airs.get(i).getValue(),i));
+        }
 
-        YAxis yLAxis = lineChart.getAxisLeft();
-        yLAxis.setTextColor(Color.BLACK);
+        LineDataSet lineDataSet = new LineDataSet(entries, "평균값");
+        setLineDataSetAttribute(lineDataSet);
 
-        YAxis yRAxis = lineChart.getAxisRight();
-        yRAxis.setDrawLabels(false);
-        yRAxis.setDrawAxisLine(false);
-        yRAxis.setDrawGridLines(false);
+        ArrayList<String> labels = new ArrayList<String>();
+        for(int i=0;i<airs.size();i++){
+            labels.add(airs.get(i).getDay());
+        }
 
-        //Description description = new Description();
-        //description.setText("");
-
-        lineChart.setDoubleTapToZoomEnabled(false);
-        lineChart.setDrawGridBackground(false);
-        lineChart.setDescription(null);
-        //lineChart.animateY(2000, Easing.EasingOption.EaseInCubic);
+        LineData lineData = new LineData(labels, lineDataSet);
+        lineChart.setData(lineData);
         lineChart.invalidate();
     }
 }
