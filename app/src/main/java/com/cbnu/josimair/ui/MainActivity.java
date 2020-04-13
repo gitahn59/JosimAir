@@ -14,7 +14,9 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.cbnu.josimair.Model.Constants;
 import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.LocationFinder;
 import com.cbnu.josimair.Model.OutdoorAir;
@@ -23,12 +25,15 @@ import com.cbnu.josimair.Model.RestAPIService;
 import com.cbnu.josimair.Model.Communication;
 import com.cbnu.josimair.Model.AppDatabase;
 import com.cbnu.josimair.R;
+import com.cbnu.josimair.ui.airInfo.AirInformationFragment;
 import com.cbnu.josimair.ui.bluetooth.DeviceListActivity;
+import com.cbnu.josimair.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -42,13 +47,14 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static Communication communication = null;
+    public Communication communication = null;
     public static RestAPIService svc = null;
     public static AppDatabase db = null;
 
     public static LocationFinder locationFinder;
     public static ResourceChecker resourceChecker;
     public static OutdoorAir outdoorAir;
+    public static Fragment fragment;
 
     public Timer airUpdateTimer;
 
@@ -62,13 +68,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
+    private final Handler mHandler = new CommunicationHandler();
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive (Context context, Intent intent) {
@@ -118,19 +118,17 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode){
             case Communication.REQUEST_CODE_ENABLE:
                 if(resultCode == Activity.RESULT_OK){
-                    //communication.start("test");
-                    //startActivity(new Intent(MainBtmActivity.this,DeviceListActivity.class));
+                    communication.showDeviceList();
                 }
                 break;
             case 1:
-
                 break;
         }
 
         switch(resultCode){
             case DeviceListActivity.BT_SELECTED:
                 String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                communication.start(address);
+                communication.connect(address);
                 break;
         }
     }
@@ -139,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.e("JosimAir","destroy");
-        communication.end();
+        communication.stop();
         finish();
     }
 
@@ -181,6 +179,28 @@ public class MainActivity extends AppCompatActivity {
                         db.indoorAirDao().insertAll(airs);
                     }
                 }).start();
+                return true;
+            case R.id.action_btServer_btn:
+                communication.start();
+                return true;
+            case R.id.action_btServer_Sign_btn:
+                byte[] bytes = new byte[4];
+                bytes[0] = 1;
+                bytes[1] = 1;
+                bytes[2] = 1;
+                bytes[3] = 1;
+                if(communication.getState() == Communication.STATE_CONNECTED) {
+                    communication.write(bytes);
+                }else{
+                    mHandler.obtainMessage(Constants.MESSAGE_READ, 4, -1, bytes).sendToTarget();
+                }
+                return true;
+            case R.id.action_btClient_btn:
+                if(!communication.enable()){
+                    communication.showDialog();
+                }else{
+                    startActivityForResult(new Intent(this, DeviceListActivity.class),Communication.RESULT_CODE_BTLIST);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -238,4 +258,22 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
+    private class CommunicationHandler extends Handler{
+        @Override
+        public void handleMessage(Message msg) {
+            String className = fragment.getClass().getSimpleName().trim();
+            switch(msg.what){
+                case Constants.MESSAGE_READ:
+                    if(className.equals("HomeFragment")){
+                        ((HomeFragment)fragment).updateIndoorAirInfo(new IndoorAir((int)(Math.random()*40)));
+                    }else if(className.equals("AirInformationFragment")){
+                        ((AirInformationFragment)fragment).update(new IndoorAir((int)(Math.random()*40)));
+                    }
+                    break;
+                case Constants.MESSAGE_TOAST:
+                    Toast.makeText(getApplicationContext(), msg.getData().getString(Constants.TOAST), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    }
 }

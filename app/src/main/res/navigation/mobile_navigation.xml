@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.cbnu.josimair.ui.airInfo.AirInfomationFragment"
+        android:name="com.cbnu.josimair.ui.airInfo.AirInformationFragment"
         android:label="@string/title_air"
         tools:layout="@layout/fragment_airinformation" />
 </navigation>

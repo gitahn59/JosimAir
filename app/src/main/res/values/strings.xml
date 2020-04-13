@@ -11,13 +11,17 @@
     <string name="setting_sound">소리</string>
     <string name="menu_management">통계 관리</string>
 
+    <!-- Communication -->
+    <string name="connection_failed">접속에 실패했습니다</string>
+    <string name="connection_lost">블루투스 접속이 끊어졌습니다</string>
+
     <!--  BluetoothChat -->
     <string name="send">Send</string>
     <string name="not_connected">You are not connected to a device</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
     <string name="title_connecting">connecting...</string>
     <string name="title_connected_to">connected: </string>
-    <string name="title_not_connected">not connected</string>
+
 
     <!--  DeviceListActivity -->
     <string name="scanning">scanning for devices...</string>
@@ -81,8 +85,7 @@
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 

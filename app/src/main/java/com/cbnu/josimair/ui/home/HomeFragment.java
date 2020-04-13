@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.cbnu.josimair.Model.AppDatabase;
+import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.IndoorAirGroup;
 import com.cbnu.josimair.Model.OutdoorAir;
 import com.cbnu.josimair.Model.RestAPIService;
@@ -32,7 +33,6 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
-    private Communication communication;
     private AppDatabase db;
     private RestAPIService svc;
     private TextView airInfoTextView;
@@ -40,17 +40,14 @@ public class HomeFragment extends Fragment {
     private TextView outdoorAirQualityTextView;
     private LineChart hourChart;
 
-    private Button btBtn;
     private ImageView imageView_01;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        communication = MainActivity.communication;
         svc = MainActivity.svc;
         db = MainActivity.db;
 
-        btBtn = (Button) root.findViewById(R.id.btBtn);
         imageView_01 = (ImageView) root.findViewById(R.id.air_face);
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
@@ -58,16 +55,10 @@ public class HomeFragment extends Fragment {
         hourChart = (LineChart)root.findViewById(R.id.hourChart);
         setHourChartAttribute();
 
-        if(communication.enable()){
-            btBtn.setText(R.string.bluetooth_enabled_btn);
-        }else{
-            btBtn.setText(R.string.bluetooth_connect_btn);
-        }
-
         setCallback();
         drawHourChart();
         updateOutdoorAirInfo();
-
+        MainActivity.fragment = this;
         return root;
     }
 
@@ -77,36 +68,6 @@ public class HomeFragment extends Fragment {
     }
 
     public void setCallback(){
-        btBtn.setOnClickListener(
-                new Button.OnClickListener(){
-                    public void onClick(View v){
-                        if(!communication.enable()) {
-                            communication.showDialog();
-                        }else{ // 여기서 블루투스 리스트에서 디바이스를 선택하여 연결
-                            //Communication thread 시작
-                            communication.start_Test_Using_RandomData();
-                            //startActivityForResult(new Intent(v.getContext(), DeviceListActivity.class),Communication.RESULT_CODE_BTLIST);
-                        }
-                    }
-                }
-        );
-        communication.setReceivedCallback(new Communication.ReceivedListener() {
-            @Override
-            public void onReceivedEvent() {
-                Log.i("HomeFragment","실내 공기정보 수신");
-                try {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            homeViewModel.updateAirInfo(airInfoTextView,airQualityTextView,communication.getReceivedAir(),imageView_01);
-                        }
-                    });
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-
         svc.setOnReceivedEvent(new RestAPIService.ReceivedListener() {
             @Override
             public void onReceivedEvent(final OutdoorAir air) {
@@ -127,6 +88,19 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void run() {
                     homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView, MainActivity.outdoorAir);
+                }
+            });
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void updateIndoorAirInfo(final IndoorAir indoorAir){
+        try {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    homeViewModel.updateAirInfo(airInfoTextView,airQualityTextView, indoorAir,imageView_01);
                 }
             });
         }catch(Exception e){

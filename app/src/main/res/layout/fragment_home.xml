@@ -29,21 +29,10 @@
                 android:background="@color/menu_name"
                 />
 
-            <Button
-                android:id="@+id/btBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/home_bluetooth"
-                android:textColor="#0c6796"
-                android:layout_below="@id/airTitle"
-                android:layout_centerHorizontal="true"
-                android:text="@string/bluetooth_connect_btn" />
-
             <ImageView
                 android:id="@+id/air_face"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_below="@id/btBtn"
                 android:layout_centerHorizontal="true"
                 app:srcCompat="@drawable/smile" />
 
