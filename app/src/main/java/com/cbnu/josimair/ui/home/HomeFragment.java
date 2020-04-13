@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,8 @@ public class HomeFragment extends Fragment {
     private LineChart hourChart;
 
     private Button btBtn;
+    private ImageView imageView_01;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -48,6 +51,7 @@ public class HomeFragment extends Fragment {
         db = MainActivity.db;
 
         btBtn = (Button) root.findViewById(R.id.btBtn);
+        imageView_01 = (ImageView) root.findViewById(R.id.air_face);
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
         outdoorAirQualityTextView = (TextView)root.findViewById(R.id.outdoorAirQualityTextView);
@@ -94,7 +98,7 @@ public class HomeFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            homeViewModel.updateAirInfo(airInfoTextView,airQualityTextView,communication.getReceivedAir());
+                            homeViewModel.updateAirInfo(airInfoTextView,airQualityTextView,communication.getReceivedAir(),imageView_01);
                         }
                     });
                 }catch(Exception e){
