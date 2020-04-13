@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +14,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.LocationFinder;
@@ -232,4 +232,10 @@ public class MainActivity extends AppCompatActivity {
         };
         airUpdateTimer.schedule(timerTask,30*60*1000,30*60*1000);
     }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
 }

@@ -115,7 +115,7 @@ public class Communication {
                 long num = 0;
                 do {
                     try {
-                        receivedAir = new IndoorAir((float) Math.random() * 15);
+                        receivedAir = new IndoorAir((float) Math.random() * 50);
                         //connected event occurred
                         mReceivedListener.onReceivedEvent();
 
