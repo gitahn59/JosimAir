@@ -54,8 +54,6 @@ public class HomeFragment extends Fragment {
         outdoorAirQualityTextView = (TextView)root.findViewById(R.id.outdoorAirQualityTextView);
         hourChart = (LineChart)root.findViewById(R.id.hourChart);
         setHourChartAttribute();
-
-        setCallback();
         drawHourChart();
         updateOutdoorAirInfo();
         MainActivity.fragment = this;
@@ -67,45 +65,12 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public void setCallback(){
-        svc.setOnReceivedEvent(new RestAPIService.ReceivedListener() {
-            @Override
-            public void onReceivedEvent(final OutdoorAir air) {
-               updateOutdoorAirInfo();
-            }
-        });
-        svc.setOnErrorOccurredEvent(new RestAPIService.ErrorOccurredListener() {
-            @Override
-            public void onErrorOccurredEvent() {
-                updateOutdoorAirInfo();
-            }
-        });
-    }
-
     public void updateOutdoorAirInfo(){
-        try {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView, MainActivity.outdoorAir);
-                }
-            });
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView, MainActivity.outdoorAir);
     }
 
     public void updateIndoorAirInfo(final IndoorAir indoorAir){
-        try {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    homeViewModel.updateAirInfo(airInfoTextView,airQualityTextView, indoorAir,imageView_01);
-                }
-            });
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        homeViewModel.updateAirInfo(airInfoTextView,airQualityTextView, indoorAir,imageView_01);
     }
 
     public void drawHourChart(){

@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     public Timer airUpdateTimer;
 
+    private final Handler mCommunicationHandler = new CommunicationHandler();
+    private final Handler mRestAPIServiceHandler = new RestAPIServiceHandler();
+
     public PermissionListener permissionListener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
@@ -67,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
         public void onPermissionDenied(ArrayList<String> deniedPermissions) {
         }
     };
-
-    private final Handler mHandler = new CommunicationHandler();
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive (Context context, Intent intent) {
@@ -96,12 +97,12 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        if(communication == null) communication = new Communication(this,mHandler);
+        if(communication == null) communication = new Communication(this, mCommunicationHandler);
         if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest2").build();
         locationFinder = new LocationFinder(this);
         resourceChecker = new ResourceChecker(this);
         outdoorAir = OutdoorAir.getInstance();
-        svc = new RestAPIService(this);
+        svc = new RestAPIService(this, mRestAPIServiceHandler);
 
         TedPermission.with(this)
             .setPermissionListener(permissionListener)
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 if(communication.getState() == Communication.STATE_CONNECTED) {
                     communication.write(bytes);
                 }else{
-                    mHandler.obtainMessage(Constants.MESSAGE_READ, 4, -1, bytes).sendToTarget();
+                    mCommunicationHandler.obtainMessage(Constants.MESSAGE_READ, 4, -1, bytes).sendToTarget();
                 }
                 return true;
             case R.id.action_btClient_btn:
@@ -272,6 +273,22 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case Constants.MESSAGE_TOAST:
                     Toast.makeText(getApplicationContext(), msg.getData().getString(Constants.TOAST), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    }
+
+    private class RestAPIServiceHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            String className = fragment.getClass().getSimpleName().trim();
+            switch (msg.what) {
+                case Constants.MESSAGE_READ:
+                    if (className.equals("HomeFragment")) {
+                        ((HomeFragment) fragment).updateOutdoorAirInfo();
+                    }
+                    break;
+                case Constants.MESSAGE_FAILED:
                     break;
             }
         }

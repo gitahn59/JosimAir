@@ -46,16 +46,6 @@ public class AirInformationFragment extends Fragment {
     }
 
     public void update(final IndoorAir indoorAir){
-        try {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, indoorAir, imageView_01, light_green, light_red, light_yellow);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, indoorAir, imageView_01, light_green, light_red, light_yellow);
     }
-
 }

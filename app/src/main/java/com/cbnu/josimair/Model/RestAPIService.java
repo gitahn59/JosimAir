@@ -5,6 +5,7 @@ import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Pair;
 
 import com.cbnu.josimair.ui.MainActivity;
@@ -18,45 +19,26 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 public class RestAPIService {
-    // received event
-    ///////////////////////////////////////////////////////////////////////////////////////////
-    public interface ReceivedListener{
-        void onReceivedEvent(OutdoorAir air);
-    }
-    private ReceivedListener mReceivedListener;
-    public void setOnReceivedEvent(ReceivedListener listener){
-        mReceivedListener = listener;
-    }
-    ///////////////////////////////////////////////////////////////////////////////////////////
-
-    // error occurred event
-    ///////////////////////////////////////////////////////////////////////////////////////////
-    public interface ErrorOccurredListener{
-        void onErrorOccurredEvent();
-    }
-    private ErrorOccurredListener mErrorOccurredListener;
-
-    public void setOnErrorOccurredEvent(ErrorOccurredListener listener){ mErrorOccurredListener = listener; }
-    ///////////////////////////////////////////////////////////////////////////////////////////
-
     private static final String airkorea_api = "openapi.airkorea.or.kr";
-    private static final String airkorea_key = "yourKey";
+    private static final String airkorea_key = "yourkey";
 
     private static final String kakao_api = "dapi.kakao.com";
-    private static final String kakao_key = "yourKey";
+    private static final String kakao_key = "yourkey";
 
-    private Context context;
+    private Context mContext;
     private String stationName;
     private ResourceChecker checker;
     private Location location;
+    private Handler mHandler;
 
     public void setLocation(Location location) {
         this.location = location;
     }
 
-    public RestAPIService(Activity context){
-        this.context = context;
+    public RestAPIService(Activity context, Handler handler){
+        this.mContext = context;
         this.checker = new ResourceChecker(context);
+        mHandler = handler;
     }
 
     public void start(){
@@ -67,10 +49,10 @@ public class RestAPIService {
                 if(tmLocation!=null) {
                     if (getNearByStationInfo(tmLocation)){
                         getOutdoorAir();
-                        mReceivedListener.onReceivedEvent(MainActivity.outdoorAir);
+                        mHandler.obtainMessage(Constants.MESSAGE_READ).sendToTarget();
                     }
                 }else{
-                    mErrorOccurredListener.onErrorOccurredEvent();
+                    mHandler.obtainMessage(Constants.MESSAGE_FAILED).sendToTarget();
                 }
             }
         });
@@ -158,11 +140,11 @@ public class RestAPIService {
             String json=getJsonResult(makeOutdoorAirUrl());
             JsonParser jp = new JsonParser(json);
             if(!jp.updateOutdoorAir(this.stationName)){
-                mErrorOccurredListener.onErrorOccurredEvent();
+                mHandler.obtainMessage(Constants.MESSAGE_FAILED).sendToTarget();
             }
         }
         catch(Exception e){
-            mErrorOccurredListener.onErrorOccurredEvent();
+            mHandler.obtainMessage(Constants.MESSAGE_FAILED).sendToTarget();
         }
     }
 

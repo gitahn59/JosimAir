@@ -8,6 +8,9 @@ public interface Constants {
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
 
+    // Communication Handler를 통해 생성되는 Message types
+    public static final int MESSAGE_FAILED = 6;
+
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "JosimAir";
     public static final String TOAST = "toast";
