@@ -30,7 +30,6 @@ import java.util.List;
 public class StatisticsFragment extends Fragment {
 
     private StatisticsViewModel statisticsViewModel;
-    private Communication communication;
     private AppDatabase db;
     private LineChart dayChart;
     private LineChart weekChart;
@@ -42,14 +41,6 @@ public class StatisticsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_statistics, container, false);
 
         db = MainActivity.db;
-        communication = MainActivity.communication;
-        communication.setReceivedCallback(new Communication.ReceivedListener() {
-            @Override
-            public void onReceivedEvent() {
-                Log.i("StatisticsFragment","실내 공기정보 수신");
-            }
-        });
-
         dayChart = (LineChart)root.findViewById(R.id.dayChart);
         setChartAttribute(dayChart);
         weekChart = (LineChart)root.findViewById(R.id.weekChart);
@@ -57,6 +48,9 @@ public class StatisticsFragment extends Fragment {
 
         drawDayChart();
         drawWeekChart();
+
+        MainActivity.fragment = this;
+
         return root;
     }
 

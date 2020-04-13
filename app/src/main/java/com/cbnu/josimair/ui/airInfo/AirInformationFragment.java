@@ -13,13 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.cbnu.josimair.Model.Communication;
+import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 
-public class AirInfomationFragment extends Fragment {
+public class AirInformationFragment extends Fragment {
 
     private AirInformationViewModel airInformationViewModel;
-    private Communication communication;
     private TextView airInfoTextView;
     private TextView airQualityTextView;
 
@@ -33,8 +33,6 @@ public class AirInfomationFragment extends Fragment {
         airInformationViewModel =
                 ViewModelProviders.of(this).get(AirInformationViewModel.class);
         View root = inflater.inflate(R.layout.fragment_airinformation, container, false);
-
-        communication = MainActivity.communication;
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
 
@@ -43,26 +41,21 @@ public class AirInfomationFragment extends Fragment {
         light_yellow = (ImageView) root.findViewById(R.id.yellow_light);
         light_red = (ImageView) root.findViewById(R.id.red_light);
 
-        setCallback();
+        MainActivity.fragment = this;
         return root;
     }
 
-    public void setCallback() {
-        communication.setReceivedCallback(new Communication.ReceivedListener() {
-            @Override
-            public void onReceivedEvent() {
-                Log.i("AirFragment","실내 공기정보 수신");
-                try {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, communication.getReceivedAir(), imageView_01, light_green, light_red, light_yellow);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
+    public void update(final IndoorAir indoorAir){
+        try {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, indoorAir, imageView_01, light_green, light_red, light_yellow);
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 }
