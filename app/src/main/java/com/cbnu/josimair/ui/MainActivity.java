@@ -13,6 +13,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.LocationFinder;

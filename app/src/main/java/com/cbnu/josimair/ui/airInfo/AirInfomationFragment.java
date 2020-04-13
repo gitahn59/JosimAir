@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,11 @@ public class AirInfomationFragment extends Fragment {
     private TextView airInfoTextView;
     private TextView airQualityTextView;
 
+    private ImageView imageView_01;
+    private ImageView light_green;
+    private ImageView light_yellow;
+    private ImageView light_red;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         airInformationViewModel =
@@ -31,6 +37,11 @@ public class AirInfomationFragment extends Fragment {
         communication = MainActivity.communication;
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
+
+        imageView_01 = (ImageView) root.findViewById(R.id.air_face);
+        light_green = (ImageView) root.findViewById(R.id.green_light);
+        light_yellow = (ImageView) root.findViewById(R.id.yellow_light);
+        light_red = (ImageView) root.findViewById(R.id.red_light);
 
         setCallback();
         return root;
@@ -45,7 +56,7 @@ public class AirInfomationFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, communication.getReceivedAir());
+                            airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, communication.getReceivedAir(), imageView_01, light_green, light_red, light_yellow);
                         }
                     });
                 } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.cbnu.josimair.ui.home;
 
 import android.graphics.Color;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.lifecycle.LiveData;
@@ -33,16 +34,19 @@ public class HomeViewModel extends ViewModel {
         return mText;
     }
 
-    public void updateAirInfo(TextView info, TextView quality, IndoorAir air){
+    public void updateAirInfo(TextView info, TextView quality, IndoorAir air, ImageView imageView){
         switch (air.getQuality()) {
             case 1:
                 info.setText(R.string.air_quality_good);
+                imageView.setImageResource(R.drawable.smile);
                 break;
             case 2:
                 info.setText(R.string.air_quality_normal);
+                imageView.setImageResource(R.drawable.sceptic);
                 break;
             case 3:
                 info.setText(R.string.air_quality_bad);
+                imageView.setImageResource(R.drawable.sad);
                 break;
         }
         quality.setText("" + air.getValue());
