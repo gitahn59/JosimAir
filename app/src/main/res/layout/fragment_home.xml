@@ -16,7 +16,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:orientation="vertical"
             >
 
@@ -31,9 +31,10 @@
 
             <ImageView
                 android:id="@+id/air_face"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 app:srcCompat="@drawable/smile" />
 
             <TextView
@@ -41,51 +42,117 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/empty_string"
-                android:layout_above="@id/airInfoTextView"
+                android:layout_below="@id/airInfoTextView"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:id="@+id/ppm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PPM"
+                android:layout_below="@id/airQualityTextView"
                 android:layout_centerHorizontal="true" />
 
             <TextView
                 android:id="@+id/airInfoTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:layout_below="@id/air_face"
                 android:textColor="#000000"
                 android:textSize="25dp"
                 android:text="@string/air_quality_good" />
 
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical">
+            >
 
             <TextView
-                android:id="@+id/outdoorTitle"
-                android:layout_width="match_parent"
+                android:id="@+id/micro_dust_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/Home_layout_outdoor"
-                android:background="@color/menu_name"
-                />
+                android:text="초미세먼지"
+                android:layout_above="@id/micro_dust"
+                android:layout_alignLeft="@id/micro_dust"
+                android:layout_centerHorizontal="true" />
+
+            <ImageView
+                android:id="@+id/micro_dust"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/micro_dust" />
 
             <TextView
-                android:id="@+id/outdoorAirInfoTextView"
-                android:layout_width="match_parent"
+                android:id="@+id/micro_dust_ppm"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/outdoor_air_info" />
+                android:text="ppm"
+                android:layout_below="@id/micro_dust"
+                android:layout_alignLeft="@id/micro_dust"
+                android:layout_centerHorizontal="true" />
 
             <TextView
-                android:id="@+id/outdoorAirQualityTextView"
-                android:layout_width="match_parent"
+                android:id="@+id/dust_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/network_receiving" />
+                android:text="미세먼지"
+                android:layout_alignLeft="@id/dust"
+                android:layout_above="@id/dust"
+                android:layout_centerHorizontal="true" />
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/dust"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_toLeftOf="@+id/micro_dust"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="40dp"
+                app:srcCompat="@drawable/dust" />
+
+            <TextView
+                android:id="@+id/dust_ppm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ppm"
+                android:layout_alignLeft="@id/dust"
+                android:layout_below="@id/dust"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:id="@+id/NO2_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이산화질소"
+                android:layout_alignLeft="@id/NO2"
+                android:layout_above="@id/NO2"
+                android:layout_centerHorizontal="true" />
+
+            <ImageView
+                android:id="@+id/NO2"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_toRightOf="@+id/micro_dust"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="40dp"
+                app:srcCompat="@drawable/dust" />
+
+            <TextView
+                android:id="@+id/NO2_ppm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ppm"
+                android:layout_alignLeft="@id/NO2"
+                android:layout_below="@id/NO2"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"

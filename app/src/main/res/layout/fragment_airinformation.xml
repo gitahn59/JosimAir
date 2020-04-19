@@ -5,65 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="0dp"
+        >
 
-        <ImageView
-            android:id="@+id/yellow_frame"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/yellow_back" />
-
-        <ImageView
-            android:id="@+id/red_frame"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_toRightOf="@id/yellow_frame"
-            android:layout_marginLeft="-10dp"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/red_back" />
-
-        <ImageView
-            android:id="@+id/green_frame"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_toLeftOf="@id/yellow_frame"
-            android:layout_centerInParent="true"
-            android:layout_marginRight="-10dp"
-            app:srcCompat="@drawable/green_back" />
-
-        <ImageView
-            android:id="@+id/yellow_light"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/yellow" />
-
-        <ImageView
-            android:id="@+id/red_light"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_toRightOf="@id/yellow_light"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/red" />
-
-        <ImageView
-            android:id="@+id/green_light"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_toLeftOf="@id/yellow_light"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/green" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        >
 
         <ImageView
             android:id="@+id/air_face"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_centerInParent="true"
-            android:layout_above="@id/yellow_light"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             app:srcCompat="@drawable/smile" />
 
         <TextView
@@ -71,19 +32,152 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/empty_string"
-            android:layout_above="@id/airInfoTextView"
+            android:layout_below="@id/airInfoTextView"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/ppm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PPM"
+            android:layout_below="@id/airQualityTextView"
             android:layout_centerHorizontal="true" />
 
         <TextView
             android:id="@+id/airInfoTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/yellow_light"
             android:layout_centerHorizontal="true"
+            android:layout_below="@id/air_face"
             android:textColor="#000000"
-            android:textSize="30dp"
+            android:textSize="25dp"
             android:text="@string/air_quality_good" />
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <TextView
+            android:id="@+id/micro_dust_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="초미세먼지"
+            android:layout_above="@id/micro_dust"
+            android:layout_alignLeft="@id/micro_dust"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:id="@+id/micro_dust"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/micro_dust" />
+
+        <TextView
+            android:id="@+id/micro_dust_ppm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ppm"
+            android:layout_below="@id/micro_dust"
+            android:layout_alignLeft="@id/micro_dust"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/dust_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="미세먼지"
+            android:layout_alignLeft="@id/dust"
+            android:layout_above="@id/dust"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:id="@+id/dust"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_toLeftOf="@+id/micro_dust"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="40dp"
+            app:srcCompat="@drawable/dust" />
+
+        <TextView
+            android:id="@+id/dust_ppm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ppm"
+            android:layout_alignLeft="@id/dust"
+            android:layout_below="@id/dust"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/NO2_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이산화질소"
+            android:layout_alignLeft="@id/NO2"
+            android:layout_above="@id/NO2"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:id="@+id/NO2"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_toRightOf="@+id/micro_dust"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="40dp"
+            app:srcCompat="@drawable/dust" />
+
+        <TextView
+            android:id="@+id/NO2_ppm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ppm"
+            android:layout_alignLeft="@id/NO2"
+            android:layout_below="@id/NO2"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ventilation"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="30dp"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/ventilation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/status"
+            android:text="적정 환기시간"
+            android:textColor="#555555"
+            android:textSize="20dp"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/ventilation_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ventilation"
+            android:text="30분"
+            android:textColor="@color/colorAccent"
+            android:textSize="50dp"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
