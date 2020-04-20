@@ -25,28 +25,35 @@ public interface DAO {
     @Delete
     void delete(IndoorAir indoorAir);
 
-    @Query("SELECT strftime('%m.%d',time) as time, avg(value) as value " +
+    @Query("SELECT * FROM " +
+            "(SELECT strftime('%m.%d',time) as time, avg(value) as value " +
             "FROM indoorair " +
             "WHERE time <= :to " +
             "GROUP BY strftime('%m%d',time) " +
-            "ORDER BY strftime('%m%d',time)" +
-            "LIMIT 7 ")
+            "ORDER BY strftime('%m%d',time) DESC " +
+            "LIMIT 7) " +
+            "ORDER BY time ASC"
+    )
     List<IndoorAirGroup> getGroupByDayBetweenDates(Date to);
 
-    @Query("SELECT strftime('%d %H:00',time) as time, avg(value) as value " +
+    @Query("SELECT * FROM " +
+            "( SELECT strftime('%d %H:00',time) as time, avg(value) as value " +
             "FROM indoorair " +
             "WHERE time <= :to " +
             "GROUP BY strftime('%m%d%H',time) " +
-            "ORDER BY strftime('%m%d%H',time) " +
-            "LIMIT 15 ")
+            "ORDER BY strftime('%m%d%H',time) DESC " +
+            "LIMIT 24 ) " +
+            "ORDER BY time ASC")
     List<IndoorAirGroup> getGroupByHourBetweenDates(Date to);
 
-    @Query("SELECT strftime('%m%d',time) as time, avg(value) as value " +
+    @Query("SELECT * FROM " +
+            "(SELECT strftime('%m%d',time) as time, avg(value) as value " +
             "FROM indoorair " +
             "WHERE time <= :to " +
             "GROUP BY strftime('%W',time) " +
-            "ORDER BY strftime('%W',time) " +
-            "LIMIT 15 ")
+            "ORDER BY strftime('%W',time) DESC " +
+            "LIMIT 7 ) " +
+            "ORDER BY time ASC ")
     List<IndoorAirGroup> getGroupByWeekBetweenDates(Date to);
 }
 
