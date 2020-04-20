@@ -24,9 +24,6 @@ public class AirInformationFragment extends Fragment {
     private TextView airQualityTextView;
 
     private ImageView imageView_01;
-    private ImageView light_green;
-    private ImageView light_yellow;
-    private ImageView light_red;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -37,15 +34,12 @@ public class AirInformationFragment extends Fragment {
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
 
         imageView_01 = (ImageView) root.findViewById(R.id.air_face);
-        light_green = (ImageView) root.findViewById(R.id.green_light);
-        light_yellow = (ImageView) root.findViewById(R.id.yellow_light);
-        light_red = (ImageView) root.findViewById(R.id.red_light);
 
         MainActivity.fragment = this;
         return root;
     }
 
     public void update(final IndoorAir indoorAir){
-        airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, indoorAir, imageView_01, light_green, light_red, light_yellow);
+        airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, indoorAir, imageView_01);
     }
 }

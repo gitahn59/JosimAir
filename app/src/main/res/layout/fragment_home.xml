@@ -63,6 +63,14 @@
                 android:textSize="25dp"
                 android:text="@string/air_quality_good" />
 
+            <TextView
+                android:id="@+id/outdoorAirQualityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_string"
+                android:textSize="0dp"
+                android:layout_centerHorizontal="true" />
+
         </RelativeLayout>
 
         <RelativeLayout
