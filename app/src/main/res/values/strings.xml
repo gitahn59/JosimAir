@@ -62,6 +62,10 @@
     <string name="air_quality_bad">나쁨</string>
     <string name="outdoor_air_info">이 시각 실외는</string>
 
+    <!-- ventilation -->
+    <string name="ventilation">환기가 필요합니다.</string>
+    <string name="no_ventilation">공기가 좋습니다.</string>
+
     <string name="empty_string">" "</string>
 
     <!-- btn string -->
