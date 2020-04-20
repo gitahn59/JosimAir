@@ -53,9 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static LocationFinder locationFinder;
     public static ResourceChecker resourceChecker;
-    public static OutdoorAir outdoorAir;
-    public static Fragment fragment;
+    public static OutdoorAir outdoorAir = null;
+    public static IndoorAir indoorAir = null;
 
+    public static Fragment fragment;
     public Timer airUpdateTimer;
 
     private final Handler mCommunicationHandler = new CommunicationHandler();
@@ -63,12 +64,10 @@ public class MainActivity extends AppCompatActivity {
 
     public PermissionListener permissionListener = new PermissionListener() {
         @Override
-        public void onPermissionGranted() {
-        }
+        public void onPermissionGranted() { }
 
         @Override
-        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-        }
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) { }
     };
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest2").build();
         locationFinder = new LocationFinder(this);
         resourceChecker = new ResourceChecker(this);
-        outdoorAir = OutdoorAir.getInstance();
         svc = new RestAPIService(this, mRestAPIServiceHandler);
 
         TedPermission.with(this)
@@ -266,9 +264,11 @@ public class MainActivity extends AppCompatActivity {
             switch(msg.what){
                 case Constants.MESSAGE_READ:
                     if(className.equals("HomeFragment")){
-                        ((HomeFragment)fragment).updateIndoorAirInfo(new IndoorAir((int)(Math.random()*40)));
+                        MainActivity.indoorAir = new IndoorAir((int)(Math.random()*40));
+                        ((HomeFragment)fragment).updateIndoorAirInfo(MainActivity.indoorAir);
                     }else if(className.equals("AirInformationFragment")){
-                        ((AirInformationFragment)fragment).update(new IndoorAir((int)(Math.random()*40)));
+                        MainActivity.indoorAir = new IndoorAir((int)(Math.random()*40));
+                        ((AirInformationFragment)fragment).updateIndoorAirInfo(MainActivity.indoorAir);
                     }
                     break;
                 case Constants.MESSAGE_TOAST:
@@ -286,6 +286,8 @@ public class MainActivity extends AppCompatActivity {
                 case Constants.MESSAGE_READ:
                     if (className.equals("HomeFragment")) {
                         ((HomeFragment) fragment).updateOutdoorAirInfo();
+                    }else if (className.equals("AirInformationFragment")) {
+                        ((AirInformationFragment) fragment).updateOutdoorAirInfo();
                     }
                     break;
                 case Constants.MESSAGE_FAILED:

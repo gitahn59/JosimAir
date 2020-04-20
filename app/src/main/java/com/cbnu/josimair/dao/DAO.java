@@ -1,10 +1,5 @@
 package com.cbnu.josimair.dao;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
-
 import androidx.room.*;
 
 import com.cbnu.josimair.Model.IndoorAir;
@@ -38,20 +33,20 @@ public interface DAO {
             "LIMIT 7 ")
     List<IndoorAirGroup> getGroupByDayBetweenDates(Date to);
 
-    @Query("SELECT strftime('%d%H',time) as time, avg(value) as value " +
+    @Query("SELECT strftime('%d %H:00',time) as time, avg(value) as value " +
             "FROM indoorair " +
             "WHERE time <= :to " +
             "GROUP BY strftime('%m%d%H',time) " +
             "ORDER BY strftime('%m%d%H',time) " +
-            "LIMIT 24 ")
+            "LIMIT 15 ")
     List<IndoorAirGroup> getGroupByHourBetweenDates(Date to);
 
-    @Query("SELECT strftime('%M',time) as time, avg(value) as value " +
+    @Query("SELECT strftime('%m%d',time) as time, avg(value) as value " +
             "FROM indoorair " +
             "WHERE time <= :to " +
             "GROUP BY strftime('%W',time) " +
             "ORDER BY strftime('%W',time) " +
-            "LIMIT 24 ")
+            "LIMIT 15 ")
     List<IndoorAirGroup> getGroupByWeekBetweenDates(Date to);
 }
 

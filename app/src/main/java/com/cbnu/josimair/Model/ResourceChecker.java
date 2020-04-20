@@ -26,7 +26,6 @@ public class ResourceChecker {
                     @Override
                     public void onAvailable(Network network) {
                         isNetworkEnable = true;
-                        //MainBtmActivity.locationFinder.setLocation();
                     }
                     @Override
                     public void onLost(Network network) {

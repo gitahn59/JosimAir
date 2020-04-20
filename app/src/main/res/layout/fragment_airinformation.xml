@@ -36,7 +36,7 @@
             android:layout_centerHorizontal="true" />
 
         <TextView
-            android:id="@+id/ppm"
+            android:id="@+id/airValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="PPM"
@@ -79,13 +79,13 @@
             app:srcCompat="@drawable/micro_dust" />
 
         <TextView
-            android:id="@+id/micro_dust_ppm"
+            android:id="@+id/microDustValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ppm"
             android:layout_below="@id/micro_dust"
             android:layout_alignLeft="@id/micro_dust"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:text="㎍/㎥" />
 
         <TextView
             android:id="@+id/dust_title"
@@ -106,13 +106,13 @@
             app:srcCompat="@drawable/dust" />
 
         <TextView
-            android:id="@+id/dust_ppm"
+            android:id="@+id/dustValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ppm"
-            android:layout_alignLeft="@id/dust"
             android:layout_below="@id/dust"
-            android:layout_centerHorizontal="true" />
+            android:layout_alignLeft="@id/dust"
+            android:layout_centerHorizontal="true"
+            android:text="㎍/㎥" />
 
         <TextView
             android:id="@+id/NO2_title"
@@ -133,7 +133,7 @@
             app:srcCompat="@drawable/dust" />
 
         <TextView
-            android:id="@+id/NO2_ppm"
+            android:id="@+id/No2ValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ppm"

@@ -70,7 +70,7 @@ public class Communication {
      */
     public Communication(Context context, Handler handler){
         mAdapter = BluetoothAdapter.getDefaultAdapter();
-        mContext = mContext;
+        mContext = context;
         mHandler = handler;
         mState = STATE_NONE;
     }
@@ -446,9 +446,6 @@ public class Communication {
         public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
-
-                // Share the sent message back to the UI Activity
-                //mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }

@@ -1,14 +1,10 @@
 package com.cbnu.josimair.ui.home;
 
 import android.graphics.Color;
-import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,9 +15,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.cbnu.josimair.Model.AppDatabase;
 import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.IndoorAirGroup;
-import com.cbnu.josimair.Model.OutdoorAir;
-import com.cbnu.josimair.Model.RestAPIService;
-import com.cbnu.josimair.Model.Communication;
 import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 import com.github.mikephil.charting.charts.LineChart;
@@ -34,27 +27,32 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private AppDatabase db;
-    private RestAPIService svc;
     private TextView airInfoTextView;
     private TextView airQualityTextView;
-    private TextView outdoorAirQualityTextView;
     private LineChart hourChart;
 
-    private ImageView imageView_01;
+    private ImageView faceImageView;
+    private TextView dustTextView;
+    private TextView microDustTextView;
+    private TextView no2TextView;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        svc = MainActivity.svc;
         db = MainActivity.db;
 
-        imageView_01 = (ImageView) root.findViewById(R.id.air_face);
+        faceImageView = (ImageView) root.findViewById(R.id.air_face);
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
-        outdoorAirQualityTextView = (TextView)root.findViewById(R.id.outdoorAirQualityTextView);
         hourChart = (LineChart)root.findViewById(R.id.hourChart);
-        setHourChartAttribute();
+
+        dustTextView = (TextView) root.findViewById(R.id.dustValueTextView);
+        microDustTextView = (TextView) root.findViewById(R.id.microDustValueTextView);
+        no2TextView = (TextView) root.findViewById(R.id.No2ValueTextView);
+
+        setChartAttribute(hourChart);
         drawHourChart();
+        updateIndoorAirInfo(MainActivity.indoorAir);
         updateOutdoorAirInfo();
         MainActivity.fragment = this;
         return root;
@@ -65,12 +63,12 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public void updateOutdoorAirInfo(){
-        homeViewModel.updateOutdoorAirInfo(outdoorAirQualityTextView, MainActivity.outdoorAir);
+    public void updateIndoorAirInfo(final IndoorAir indoorAir){
+        homeViewModel.updateAirInfo(airInfoTextView,airQualityTextView, indoorAir, faceImageView);
     }
 
-    public void updateIndoorAirInfo(final IndoorAir indoorAir){
-        homeViewModel.updateAirInfo(airInfoTextView,airQualityTextView, indoorAir,imageView_01);
+    public void updateOutdoorAirInfo(){
+        homeViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, MainActivity.outdoorAir);
     }
 
     public void drawHourChart(){
@@ -93,23 +91,25 @@ public class HomeFragment extends Fragment {
         }).start();
     }
 
-    public void setHourChartAttribute(){
-        XAxis xAxis = hourChart.getXAxis();
+    public void setChartAttribute(LineChart chart){
+        XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.BLACK);
         xAxis.enableGridDashedLine(8, 24, 0);
 
-        YAxis yLAxis = hourChart.getAxisLeft();
+        YAxis yLAxis = chart.getAxisLeft();
         yLAxis.setTextColor(Color.BLACK);
 
-        YAxis yRAxis = hourChart.getAxisRight();
+        YAxis yRAxis = chart.getAxisRight();
         yRAxis.setDrawLabels(false);
         yRAxis.setDrawAxisLine(false);
         yRAxis.setDrawGridLines(false);
 
-        hourChart.setDoubleTapToZoomEnabled(false);
-        hourChart.setDrawGridBackground(false);
-        hourChart.setDescription(null);
-    }
+        chart.setDoubleTapToZoomEnabled(false);
+        chart.setDrawGridBackground(false);
+        chart.setDescription(null);
 
+        chart.setExtraLeftOffset(10);
+        chart.setExtraRightOffset(10);
+    }
 }

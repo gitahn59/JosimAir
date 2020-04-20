@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cbnu.josimair.Model.IndoorAir;
+import com.cbnu.josimair.Model.OutdoorAir;
 import com.cbnu.josimair.R;
 
 public class AirInformationViewModel extends ViewModel {
@@ -24,6 +25,7 @@ public class AirInformationViewModel extends ViewModel {
     }
 
     public void updateAirInfo(TextView info, TextView quality, IndoorAir air, ImageView imageView){
+        if(air==null) return;
         switch (air.getQuality()) {
             case 1:
                 info.setText(R.string.air_quality_good);
@@ -40,4 +42,18 @@ public class AirInformationViewModel extends ViewModel {
         }
         quality.setText("" + air.getValue());
     }
+
+    public void updateOutdoorAirInfo(TextView dust, TextView microDust, TextView no2, OutdoorAir air){
+        if(air==null) {
+            dust.setText("㎍/㎥");
+            microDust.setText("㎍/㎥");
+            no2.setText("ppm");
+        }
+        else{
+            dust.setText(air.getPm25Value()+" ㎍/㎥");
+            microDust.setText(air.getPm10Value()+" ㎍/㎥");
+            no2.setText(air.getNo2Value()+" ppm");
+        }
+    }
+
 }

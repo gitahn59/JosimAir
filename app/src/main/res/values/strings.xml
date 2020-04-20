@@ -92,5 +92,9 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
+    <!-- Sync Preferences -->
+    <string name="tmLocationAPI">http://dapi.kakao.com/v2/local/geo/transcoord.json?x=%s&amp;y=%s&amp;input_coord=WGS84&amp;output_coord=TM</string>
+    <string name="nearbyStationAPI">http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?pageNo=1&amp;numOfRows=10&amp;_returnType=json&amp;ServiceKey=%s&amp;tmX=%s&amp;tmY=%s</string>
+    <string name="airInfoAPI">http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?pageNo=1&amp;numOfRows=1&amp;ver=1.3&amp;_returnType=json&amp;ServiceKey=%s&amp;stationName=%s&amp;dataTerm=DAILY</string>
 
 </resources>

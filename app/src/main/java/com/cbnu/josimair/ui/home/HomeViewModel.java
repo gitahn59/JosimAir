@@ -35,6 +35,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void updateAirInfo(TextView info, TextView quality, IndoorAir air, ImageView imageView){
+        if(air==null) return;
         switch (air.getQuality()) {
             case 1:
                 info.setText(R.string.air_quality_good);
@@ -52,18 +53,16 @@ public class HomeViewModel extends ViewModel {
         quality.setText("" + air.getValue());
     }
 
-    public void updateOutdoorAirInfo(TextView quality, OutdoorAir air){
-        if(air.getStation()==null) {
-            quality.setText(R.string.network_receiving);
-            if(!MainActivity.resourceChecker.isNetworkEnable()){
-                quality.setText(R.string.network_error);
-            }else if(!MainActivity.locationFinder.isEnabled()){
-                quality.setText(R.string.gps_error);
-            }
+    public void updateOutdoorAirInfo(TextView dust, TextView microDust, TextView no2, OutdoorAir air){
+        if(air==null) {
+            dust.setText("㎍/㎥");
+            microDust.setText("㎍/㎥");
+            no2.setText("ppm");
         }
         else{
-            quality.setText(air.getStation() + " : " + air.getValue());
-
+            dust.setText(air.getPm25Value()+" ㎍/㎥");
+            microDust.setText(air.getPm10Value()+" ㎍/㎥");
+            no2.setText(air.getNo2Value()+" ppm");
         }
     }
 
