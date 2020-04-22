@@ -20,9 +20,9 @@ JosimAir는 다음과 같은 오픈소스를 원형, 가공하여 사용하고 �
 
 #### Apache License 2.0
 
-android-BluetoothChat : Copyright (C) 2014 The Android Open Source Project
-MPAndroidChart : Copyright 2019 Philipp Jahoda
-TedPermission : Copyright 2017 Ted Park
+android-BluetoothChat : Copyright (C) 2014 The Android Open Source Project   
+MPAndroidChart : Copyright 2019 Philipp Jahoda   
+TedPermission : Copyright 2017 Ted Park   
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
