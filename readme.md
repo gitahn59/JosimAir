@@ -7,12 +7,14 @@
 2. 실내 공기 정보
 3. 일간, 주간, 월간 통계 
 
-<hr>
+<hr>   
+
 ## Demo   
 
 ![demo](https://user-images.githubusercontent.com/16396879/79939600-7de1c700-849a-11ea-9f1c-caceb3c31bca.png)
 
-<hr>
+<hr>   
+
 ## License 명시
 JosimAir는 다음과 같은 오픈소스를 원형, 가공하여 사용하고 있습니다.
 
