@@ -8,9 +8,9 @@
 3. 일간, 주간, 월간 통계 
 
 <hr>
-## Demo
-![KakaoTalk_20200420_152336432](https://user-images.githubusercontent.com/16396879/79939600-7de1c700-849a-11ea-9f1c-caceb3c31bca.png)
+## Demo   
 
+![demo](https://user-images.githubusercontent.com/16396879/79939600-7de1c700-849a-11ea-9f1c-caceb3c31bca.png)
 
 <hr>
 ## License 명시
