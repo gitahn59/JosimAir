@@ -14,6 +14,7 @@ import com.cbnu.josimair.R;
 public class AirInformationViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
+    android.text.format.DateFormat df = new android.text.format.DateFormat();
 
     public AirInformationViewModel() {
         mText = new MutableLiveData<>();
@@ -43,16 +44,20 @@ public class AirInformationViewModel extends ViewModel {
         quality.setText("" + air.getValue());
     }
 
-    public void updateOutdoorAirInfo(TextView dust, TextView microDust, TextView no2, OutdoorAir air){
+    public void updateOutdoorAirInfo(TextView dust, TextView microDust, TextView no2, TextView mang, TextView date, OutdoorAir air){
         if(air==null) {
             dust.setText("㎍/㎥");
             microDust.setText("㎍/㎥");
             no2.setText("ppm");
+            mang.setText("관측소 명");
+            date.setText("측정시간");
         }
         else{
             dust.setText(air.getPm25Value()+" ㎍/㎥");
             microDust.setText(air.getPm10Value()+" ㎍/㎥");
             no2.setText(air.getNo2Value()+" ppm");
+            mang.setText("측정소 : "+air.getMangName());
+            date.setText(df.format("dd/MM",air.getDataTime()).toString());
         }
     }
 

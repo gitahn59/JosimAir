@@ -1,6 +1,7 @@
 package com.cbnu.josimair.ui.airInfo;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,15 @@ public class AirInformationFragment extends Fragment {
     private TextView airQualityTextView;
 
     private ImageView faceImageView;
+    private ImageView dustImageView;
+    private ImageView microdustImageView;
+    private ImageView NO2ImageView;
 
     private TextView dustTextView;
     private TextView microDustTextView;
     private TextView no2TextView;
+    private TextView mangNameTextView;
+    private TextView dateTextView;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -37,10 +43,35 @@ public class AirInformationFragment extends Fragment {
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
 
         faceImageView = (ImageView) root.findViewById(R.id.air_face);
+        dustImageView = (ImageView) root.findViewById(R.id.dust);
+        microdustImageView = (ImageView) root.findViewById(R.id.micro_dust);
+        NO2ImageView = (ImageView) root.findViewById(R.id.NO2);
 
         dustTextView = (TextView) root.findViewById(R.id.dustValueTextView);
         microDustTextView = (TextView) root.findViewById(R.id.microDustValueTextView);
         no2TextView = (TextView) root.findViewById(R.id.No2ValueTextView);
+        mangNameTextView = (TextView) root.findViewById(R.id.mangName);
+        dateTextView = (TextView) root.findViewById(R.id.date);
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        ViewGroup.LayoutParams face_params = (ViewGroup.LayoutParams)  faceImageView.getLayoutParams();
+        ViewGroup.LayoutParams dust_params = (ViewGroup.LayoutParams)  dustImageView.getLayoutParams();
+        ViewGroup.LayoutParams microdust_params = (ViewGroup.LayoutParams)  microdustImageView.getLayoutParams();
+        ViewGroup.LayoutParams NO2_params = (ViewGroup.LayoutParams)  NO2ImageView.getLayoutParams();
+
+        face_params.height = metrics.heightPixels/5;
+        face_params.width = face_params.height;
+
+        dust_params.height = metrics.heightPixels/15;
+        dust_params.width = dust_params.height;
+
+        microdust_params.height = metrics.heightPixels/15;
+        microdust_params.width = dust_params.height;
+
+        NO2_params.height = metrics.heightPixels/15;
+        NO2_params.width = dust_params.height;
 
         updateIndoorAirInfo(MainActivity.indoorAir);
         updateOutdoorAirInfo();
@@ -54,6 +85,6 @@ public class AirInformationFragment extends Fragment {
     }
 
     public void updateOutdoorAirInfo(){
-        airInformationViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, MainActivity.outdoorAir);
+        airInformationViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView,mangNameTextView, dateTextView, MainActivity.outdoorAir);
     }
 }

@@ -16,7 +16,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:orientation="vertical"
             >
 
@@ -31,10 +31,10 @@
 
             <ImageView
                 android:id="@+id/air_face"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="30dp"
                 app:srcCompat="@drawable/smile" />
 
             <TextView
@@ -72,6 +72,20 @@
             >
 
             <TextView
+                android:id="@+id/mangName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_string"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_string"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
                 android:id="@+id/micro_dust_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,8 +96,8 @@
 
             <ImageView
                 android:id="@+id/micro_dust"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 app:srcCompat="@drawable/micro_dust" />
@@ -108,8 +122,8 @@
 
             <ImageView
                 android:id="@+id/dust"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_toLeftOf="@+id/micro_dust"
                 android:layout_centerInParent="true"
                 android:layout_marginRight="40dp"
@@ -135,8 +149,8 @@
 
             <ImageView
                 android:id="@+id/NO2"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_toRightOf="@+id/micro_dust"
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="40dp"
@@ -180,7 +194,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:orientation="vertical">
         </LinearLayout>
 

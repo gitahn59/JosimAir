@@ -1,10 +1,13 @@
 package com.cbnu.josimair.ui.home;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,9 +35,14 @@ public class HomeFragment extends Fragment {
     private LineChart hourChart;
 
     private ImageView faceImageView;
+    private ImageView dustImageView;
+    private ImageView microdustImageView;
+    private ImageView NO2ImageView;
     private TextView dustTextView;
     private TextView microDustTextView;
     private TextView no2TextView;
+    private TextView mangNameTextView;
+    private TextView dateTextView;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
@@ -42,6 +50,9 @@ public class HomeFragment extends Fragment {
         db = MainActivity.db;
 
         faceImageView = (ImageView) root.findViewById(R.id.air_face);
+        dustImageView = (ImageView) root.findViewById(R.id.dust);
+        microdustImageView = (ImageView) root.findViewById(R.id.micro_dust);
+        NO2ImageView = (ImageView) root.findViewById(R.id.NO2);
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
         airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
         hourChart = (LineChart)root.findViewById(R.id.hourChart);
@@ -49,6 +60,29 @@ public class HomeFragment extends Fragment {
         dustTextView = (TextView) root.findViewById(R.id.dustValueTextView);
         microDustTextView = (TextView) root.findViewById(R.id.microDustValueTextView);
         no2TextView = (TextView) root.findViewById(R.id.No2ValueTextView);
+        mangNameTextView = (TextView) root.findViewById(R.id.mangName);
+        dateTextView = (TextView) root.findViewById(R.id.date);
+
+        // 디스플레이 사이즈 받기
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        ViewGroup.LayoutParams face_params = (ViewGroup.LayoutParams)  faceImageView.getLayoutParams();
+        ViewGroup.LayoutParams dust_params = (ViewGroup.LayoutParams)  dustImageView.getLayoutParams();
+        ViewGroup.LayoutParams microdust_params = (ViewGroup.LayoutParams)  microdustImageView.getLayoutParams();
+        ViewGroup.LayoutParams NO2_params = (ViewGroup.LayoutParams)  NO2ImageView.getLayoutParams();
+
+        face_params.height = metrics.heightPixels/5;
+        face_params.width = face_params.height;
+
+        dust_params.height = metrics.heightPixels/15;
+        dust_params.width = dust_params.height;
+
+        microdust_params.height = metrics.heightPixels/15;
+        microdust_params.width = dust_params.height;
+
+        NO2_params.height = metrics.heightPixels/15;
+        NO2_params.width = dust_params.height;
 
         setChartAttribute(hourChart);
         drawHourChart();
@@ -68,7 +102,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void updateOutdoorAirInfo(){
-        homeViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, MainActivity.outdoorAir);
+        homeViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, mangNameTextView, dateTextView, MainActivity.outdoorAir);
     }
 
     public void drawHourChart(){
