@@ -19,8 +19,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 public class RestAPIService {
-    private static final String airkorea_key = "Ykpt%2Ffoyi49PDgJhtLVWnE1QB8R1t08idlq1Yieti3brksGN%2F7qszre1MeWYvX3uNXGx4V8PkUSzkeVU0g837Q%3D%3D";
-    private static final String kakao_key = "5cfba43ef4be0acf3dce5dc476b2973d";
+    private static final String airkorea_key = "yourkey";
+    private static final String kakao_key = "yourkey";
 
     private Context mContext;
     private Location location;
@@ -115,8 +115,10 @@ public class RestAPIService {
             HttpURLConnection connection = (HttpURLConnection) endpoint.openConnection();
             connection.setRequestProperty("Accept", "application/json");
 
-            if(Key!=null)
-                connection.setRequestProperty("Authorization",Key);
+            // 별도의 key가 있으면 key 등록
+            if(Key!=null) connection.setRequestProperty("Authorization",Key);
+
+            // request가 실패하면 null 리턴
             if(connection.getResponseCode()!=200) return null;
 
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
