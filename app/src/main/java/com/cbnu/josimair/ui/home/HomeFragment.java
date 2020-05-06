@@ -24,6 +24,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -105,17 +106,35 @@ public class HomeFragment extends Fragment {
         homeViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, mangNameTextView, dateTextView, MainActivity.outdoorAir);
     }
 
+    private ArrayList<IndoorAirGroup> sortOrderbyTime(List<IndoorAirGroup> src, int now){
+        ArrayList<IndoorAirGroup> li = new ArrayList<IndoorAirGroup>();
+        ArrayList<IndoorAirGroup> temp = new ArrayList<IndoorAirGroup>();
+        for(IndoorAirGroup i : src){
+            int h = Integer.parseInt(i.getDay());
+            if(h<=now) temp.add(i);
+            else li.add(i);
+        }
+
+        for(IndoorAirGroup i : temp) {
+            li.add(i);
+        }
+        return li;
+    }
+
     public void drawHourChart(){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 Calendar to = Calendar.getInstance();
-                final List<IndoorAirGroup> li = db.indoorAirDao().getGroupByHourBetweenDates(to.getTime());
+                Calendar from = Calendar.getInstance();
+                from.add(Calendar.HOUR, -24);
+                List<IndoorAirGroup> li = db.indoorAirDao().getGroupByHourBetweenDatesWithTimeTable(from.getTime(),to.getTime());
+                final List<IndoorAirGroup> fli = sortOrderbyTime(li,to.get(Calendar.HOUR_OF_DAY));
                 try {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            homeViewModel.updateHourChart(hourChart,li);
+                            homeViewModel.updateHourChart(hourChart, fli);
                         }
                     });
                 }catch(Exception e){

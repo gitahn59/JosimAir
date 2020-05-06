@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                         IndoorAir[] airs = new IndoorAir [7];
                         for(int i=0; i<7; i++){
                             airs[i] = new IndoorAir((float)Math.random() * 15);
-                            Date d = new Date(System.currentTimeMillis()-86400000*(i+1));
+                            Date d = new Date(System.currentTimeMillis()-86400000*(i));
                             airs[i].setTime(d);
                         }
                         db.indoorAirDao().insertAll(airs);
