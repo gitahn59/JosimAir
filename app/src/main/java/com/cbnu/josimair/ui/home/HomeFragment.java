@@ -42,7 +42,6 @@ public class HomeFragment extends Fragment {
     private TextView dustTextView;
     private TextView microDustTextView;
     private TextView no2TextView;
-    private TextView mangNameTextView;
     private TextView dateTextView;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,13 +54,11 @@ public class HomeFragment extends Fragment {
         microdustImageView = (ImageView) root.findViewById(R.id.micro_dust);
         NO2ImageView = (ImageView) root.findViewById(R.id.NO2);
         airInfoTextView = (TextView) root.findViewById(R.id.airInfoTextView);
-        airQualityTextView = (TextView) root.findViewById(R.id.airQualityTextView);
         hourChart = (LineChart)root.findViewById(R.id.hourChart);
 
         dustTextView = (TextView) root.findViewById(R.id.dustValueTextView);
         microDustTextView = (TextView) root.findViewById(R.id.microDustValueTextView);
         no2TextView = (TextView) root.findViewById(R.id.No2ValueTextView);
-        mangNameTextView = (TextView) root.findViewById(R.id.mangName);
         dateTextView = (TextView) root.findViewById(R.id.date);
 
         // 디스플레이 사이즈 받기
@@ -76,13 +73,13 @@ public class HomeFragment extends Fragment {
         face_params.height = metrics.heightPixels/5;
         face_params.width = face_params.height;
 
-        dust_params.height = metrics.heightPixels/15;
+        dust_params.height = metrics.heightPixels/20;
         dust_params.width = dust_params.height;
 
-        microdust_params.height = metrics.heightPixels/15;
+        microdust_params.height = metrics.heightPixels/20;
         microdust_params.width = dust_params.height;
 
-        NO2_params.height = metrics.heightPixels/15;
+        NO2_params.height = metrics.heightPixels/20;
         NO2_params.width = dust_params.height;
 
         setChartAttribute(hourChart);
@@ -99,11 +96,11 @@ public class HomeFragment extends Fragment {
     }
 
     public void updateIndoorAirInfo(final IndoorAir indoorAir){
-        homeViewModel.updateAirInfo(airInfoTextView,airQualityTextView, indoorAir, faceImageView);
+        homeViewModel.updateAirInfo(airInfoTextView, indoorAir, faceImageView);
     }
 
     public void updateOutdoorAirInfo(){
-        homeViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, mangNameTextView, dateTextView, MainActivity.outdoorAir);
+        homeViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, dateTextView, MainActivity.outdoorAir);
     }
 
     private ArrayList<IndoorAirGroup> sortOrderbyTime(List<IndoorAirGroup> src, int now){

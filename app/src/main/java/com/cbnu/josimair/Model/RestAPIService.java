@@ -19,8 +19,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 public class RestAPIService {
-    private static final String airkorea_key = "yourkey";
-    private static final String kakao_key = "yourkey";
+    private static final String airkorea_key = "your_key";
+    private static final String kakao_key = "your_key";
 
     private Context mContext;
     private Location location;

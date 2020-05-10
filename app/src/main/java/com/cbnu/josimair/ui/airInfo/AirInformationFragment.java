@@ -30,7 +30,6 @@ public class AirInformationFragment extends Fragment {
     private TextView dustTextView;
     private TextView microDustTextView;
     private TextView no2TextView;
-    private TextView mangNameTextView;
     private TextView dateTextView;
 
 
@@ -50,7 +49,6 @@ public class AirInformationFragment extends Fragment {
         dustTextView = (TextView) root.findViewById(R.id.dustValueTextView);
         microDustTextView = (TextView) root.findViewById(R.id.microDustValueTextView);
         no2TextView = (TextView) root.findViewById(R.id.No2ValueTextView);
-        mangNameTextView = (TextView) root.findViewById(R.id.mangName);
         dateTextView = (TextView) root.findViewById(R.id.date);
 
         DisplayMetrics metrics = new DisplayMetrics();
@@ -85,6 +83,6 @@ public class AirInformationFragment extends Fragment {
     }
 
     public void updateOutdoorAirInfo(){
-        airInformationViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView,mangNameTextView, dateTextView, MainActivity.outdoorAir);
+        airInformationViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, dateTextView, MainActivity.outdoorAir);
     }
 }

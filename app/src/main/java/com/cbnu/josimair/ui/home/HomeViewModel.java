@@ -38,7 +38,7 @@ public class HomeViewModel extends ViewModel {
         return mText;
     }
 
-    public void updateAirInfo(TextView info, TextView quality, IndoorAir air, ImageView imageView){
+    public void updateAirInfo(TextView info, IndoorAir air, ImageView imageView){
         if(air==null) return;
         switch (air.getQuality()) {
             case 1:
@@ -54,23 +54,59 @@ public class HomeViewModel extends ViewModel {
                 imageView.setImageResource(R.drawable.sad);
                 break;
         }
-        quality.setText("" + air.getValue());
     }
 
-    public void updateOutdoorAirInfo(TextView dust, TextView microDust, TextView no2, TextView mang, TextView date, OutdoorAir air){
+    public void updateOutdoorAirInfo(TextView dust, TextView microDust, TextView no2, TextView date, OutdoorAir air){
         if(air==null) {
             dust.setText("㎍/㎥");
             microDust.setText("㎍/㎥");
             no2.setText("ppm");
-            mang.setText("관측소 명");
             date.setText("측정시간");
         }
         else{
-            dust.setText(air.getPm25Value()+" ㎍/㎥");
-            microDust.setText(air.getPm10Value()+" ㎍/㎥");
-            no2.setText(air.getNo2Value()+" ppm");
-            mang.setText("측정소 : "+air.getMangName());
-            date.setText(df.format("dd/MM",air.getDataTime()).toString());
+            switch(air.getPm25Grade()){
+                case 1:
+                    dust.setText(" 좋음 ");
+                    break;
+                case 2:
+                    dust.setText(" 보통 ");
+                    break;
+                case 3:
+                    dust.setText(" 나쁨 ");
+                    break;
+                case 4:
+                    dust.setText(" 매우 나쁨 ");
+                    break;
+            }
+            switch(air.getPm10Grade()){
+                case 1:
+                    microDust.setText(" 좋음 ");
+                    break;
+                case 2:
+                    microDust.setText(" 보통 ");
+                    break;
+                case 3:
+                    microDust.setText(" 나쁨 ");
+                    break;
+                case 4:
+                    microDust.setText(" 매우 나쁨 ");
+                    break;
+            }
+            switch(air.getNo2Grade()){
+                case 1:
+                    no2.setText(" 좋음 ");
+                    break;
+                case 2:
+                    no2.setText(" 보통 ");
+                    break;
+                case 3:
+                    no2.setText(" 나쁨 ");
+                    break;
+                case 4:
+                    no2.setText(" 매우 나쁨 ");
+                    break;
+            }
+            date.setText(df.format("MM/dd",air.getDataTime()).toString());
         }
     }
 
