@@ -15,4 +15,6 @@ public interface Constants {
     public static final String DEVICE_NAME = "JosimAir";
     public static final String TOAST = "toast";
 
+    public static final int GPS_UPDATED = 100;
+    public static final int NETWORK_AVAILABLE = 200;
 }

@@ -50,24 +50,16 @@ public class MainActivity extends AppCompatActivity {
 
     public Communication communication = null;
     public static RestAPIService svc = null;
-    public static LocationFinder locationFinder;
-    public static ResourceChecker resourceChecker;
     public static OutdoorAir outdoorAir = null;
     public static IndoorAir indoorAir = null;
-
     public static Fragment fragment;
-    public Timer airUpdateTimer;
 
-    private final Handler mCommunicationHandler = new CommunicationHandler();
-    private final Handler mRestAPIServiceHandler = new RestAPIServiceHandler();
+    final Handler mCommunicationHandler = new CommunicationHandler();
+    final Handler mRestAPIServiceHandler = new RestAPIServiceHandler();
+    final Handler mLocationHandler = new LocationHandler();
+    final Handler mNetworkHandler = new NetworkHandler();
+    public final PermissionListener permissionListener = new LocationPermissionListener();
 
-    public PermissionListener permissionListener = new PermissionListener() {
-        @Override
-        public void onPermissionGranted() { }
-
-        @Override
-        public void onPermissionDenied(ArrayList<String> deniedPermissions) { }
-    };
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive (Context context, Intent intent) {
@@ -96,17 +88,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         if(communication == null) communication = new Communication(this, mCommunicationHandler);
-        locationFinder = new LocationFinder(this);
-        resourceChecker = new ResourceChecker(this);
         svc = new RestAPIService(this, mRestAPIServiceHandler);
-
-        TedPermission.with(this)
-            .setPermissionListener(permissionListener)
-            .setRationaleMessage("외부 대기정보를 가져오기 위해 위치 권한이 필요합니다")
-            .setDeniedMessage("[설정] > [권한] 에서 다시 권한을 허용할 수 있습니다.")
-            .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
-            .check();
-        setOpeningTimerTask();
 
         new Thread(new Runnable() {
             @Override
@@ -119,6 +101,28 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
+        ResourceChecker rc = ResourceChecker.getInstance(getApplicationContext(),mNetworkHandler);
+        LocationFinder lf = LocationFinder.getInstance(getApplicationContext(),mLocationHandler);
+        if(rc.isNetworkEnable() && lf.isEnabled()){
+            lf.requestLocationUpdates();
+            svc.setLocation(lf.getLocation());
+            svc.start();
+        }
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        checkPermission();
+    }
+
+    public void checkPermission(){
+        TedPermission.with(this)
+                .setPermissionListener(permissionListener)
+                .setRationaleMessage("외부 대기정보를 가져오기 위해 위치 권한이 필요합니다")
+                .setDeniedMessage("[설정] > [권한] 에서 다시 권한을 허용할 수 있습니다.")
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
+                .check();
     }
 
     @Override
@@ -216,52 +220,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setOpeningTimerTask(){
-        airUpdateTimer = new Timer();
-        final TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                      @Override
-                      public void run() {
-                          if(resourceChecker.isNetworkEnable() && locationFinder.isEnabled()){
-                              Location loc = locationFinder.getLocation();
-                              if(loc==null) return;
-                              svc.setLocation(loc);
-                              svc.start();
-                              airUpdateTimer.cancel();
-                              setUpdateTask();
-                          }
-                      }
-                  }
-                );
-            }
-        };
-        airUpdateTimer.schedule(timerTask,0,1000);
-    }
-
-    private void setUpdateTask(){
-        airUpdateTimer = new Timer();
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(resourceChecker.isNetworkEnable() && locationFinder.isEnabled()){
-                            svc.setLocation(locationFinder.getLocation());
-                            svc.start();
-                        }else{
-                            airUpdateTimer.cancel();
-                            setOpeningTimerTask();
-                        }
-                    }
-                });
-            }
-        };
-        airUpdateTimer.schedule(timerTask,30*60*1000,30*60*1000);
-    }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -304,5 +262,44 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    private class LocationHandler extends  Handler{
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what==Constants.GPS_UPDATED) {
+                ResourceChecker rc = ResourceChecker.getInstance(getApplicationContext(), mNetworkHandler);
+                LocationFinder locationFinder = LocationFinder.getInstance(getApplicationContext(), mLocationHandler);
+                if (rc.isNetworkEnable()) {
+                    svc.setLocation((Location) msg.obj);
+                    svc.start();
+                }
+            }
+        }
+    }
+
+    private class NetworkHandler extends Handler{
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what == Constants.NETWORK_AVAILABLE) {
+                LocationFinder locationFinder = LocationFinder.getInstance(getApplicationContext(), mLocationHandler);
+                if (locationFinder.isEnabled()) {
+                    locationFinder.requestLocationUpdates();
+                }
+            }
+        }
+    }
+
+    private class LocationPermissionListener implements PermissionListener{
+        @Override
+        public void onPermissionGranted() {
+            LocationFinder locationFinder = LocationFinder.getInstance(getApplicationContext(), mLocationHandler);
+            if(locationFinder.isEnabled()) {
+                locationFinder.requestLocationUpdates();
+            }
+        }
+
+        @Override
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) { }
     }
 }
