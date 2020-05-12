@@ -11,11 +11,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.cbnu.josimair.Model.Constants;
@@ -26,6 +24,7 @@ import com.cbnu.josimair.Model.ResourceChecker;
 import com.cbnu.josimair.Model.RestAPIService;
 import com.cbnu.josimair.Model.Communication;
 import com.cbnu.josimair.Model.AppDatabase;
+import com.cbnu.josimair.Model.Timetable;
 import com.cbnu.josimair.R;
 import com.cbnu.josimair.ui.airInfo.AirInformationFragment;
 import com.cbnu.josimair.ui.bluetooth.DeviceListActivity;
@@ -40,10 +39,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.room.Room;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
     public Communication communication = null;
     public static RestAPIService svc = null;
-    public static AppDatabase db = null;
-
     public static LocationFinder locationFinder;
     public static ResourceChecker resourceChecker;
     public static OutdoorAir outdoorAir = null;
@@ -99,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         if(communication == null) communication = new Communication(this, mCommunicationHandler);
-        if(db == null) db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "josimAirTest2").build();
         locationFinder = new LocationFinder(this);
         resourceChecker = new ResourceChecker(this);
         svc = new RestAPIService(this, mRestAPIServiceHandler);
@@ -111,6 +107,18 @@ public class MainActivity extends AppCompatActivity {
             .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
             .check();
         setOpeningTimerTask();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+                if(db.indoorAirDao().isRaady()==0){
+                    List<Timetable> dates = Timetable.makeTimetalbes();
+                    db.indoorAirDao().insertAll(dates.toArray(new Timetable[0]));
+                }
+            }
+        }).start();
+
     }
 
     @Override
@@ -177,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                             Date d = new Date(System.currentTimeMillis()-86400000*(i));
                             airs[i].setTime(d);
                         }
-                        db.indoorAirDao().insertAll(airs);
+                        AppDatabase.getInstance(getApplicationContext()).indoorAirDao().insertAll(airs);
                     }
                 }).start();
                 return true;

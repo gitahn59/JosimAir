@@ -30,9 +30,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
-    private AppDatabase db;
     private TextView airInfoTextView;
-    private TextView airQualityTextView;
     private LineChart hourChart;
 
     private ImageView faceImageView;
@@ -47,7 +45,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        db = MainActivity.db;
 
         faceImageView = (ImageView) root.findViewById(R.id.air_face);
         dustImageView = (ImageView) root.findViewById(R.id.dust);
@@ -125,7 +122,7 @@ public class HomeFragment extends Fragment {
                 Calendar to = Calendar.getInstance();
                 Calendar from = Calendar.getInstance();
                 from.add(Calendar.HOUR, -24);
-                List<IndoorAirGroup> li = db.indoorAirDao().getGroupByHourBetweenDatesWithTimeTable(from.getTime(),to.getTime());
+                List<IndoorAirGroup> li = AppDatabase.getInstance(getContext()).indoorAirDao().getGroupByHourBetweenDatesWithTimeTable(from.getTime(),to.getTime());
                 final List<IndoorAirGroup> fli = sortOrderbyTime(li,to.get(Calendar.HOUR_OF_DAY));
                 try {
                     getActivity().runOnUiThread(new Runnable() {

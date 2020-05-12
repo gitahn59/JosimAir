@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.cbnu.josimair.Model.AppDatabase;
 import com.cbnu.josimair.R;
 
 import java.text.SimpleDateFormat;
@@ -67,7 +68,7 @@ public class ManagementActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        MainActivity.db.indoorAirDao().deleteAllBetweenDates(start.getTime(),end.getTime());
+                        AppDatabase.getInstance(getApplicationContext()).indoorAirDao().deleteAllBetweenDates(start.getTime(),end.getTime());
                     }
                 }).start();
             }
@@ -91,7 +92,7 @@ public class ManagementActivity extends AppCompatActivity {
 
     String calendarToString(Calendar calendar){
         String result="";
-        result = result+ sdfDate.format(calendar.getTime()) +" "+ sdfTime.format(calendar.getTime());
+        result = result + sdfDate.format(calendar.getTime()) +" "+ sdfTime.format(calendar.getTime());
         return result;
     }
 

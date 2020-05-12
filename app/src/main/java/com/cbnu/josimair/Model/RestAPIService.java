@@ -1,6 +1,5 @@
 package com.cbnu.josimair.Model;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -15,12 +14,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.net.ssl.HttpsURLConnection;
-
-
 public class RestAPIService {
-    private static final String airkorea_key = "your_key";
-    private static final String kakao_key = "your_key";
+    private static final String airkorea_key = "Ykpt/foyi49PDgJhtLVWnE1QB8R1t08idlq1Yieti3brksGN/7qszre1MeWYvX3uNXGx4V8PkUSzkeVU0g837Q==";
+    private static final String kakao_key = "8d5d55fd6dd1923ff7dafb8f2ffc2bd2";
 
     private Context mContext;
     private Location location;

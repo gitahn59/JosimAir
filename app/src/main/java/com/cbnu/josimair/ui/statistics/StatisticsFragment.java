@@ -2,19 +2,13 @@ package com.cbnu.josimair.ui.statistics;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.cbnu.josimair.Model.Communication;
-import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.IndoorAirGroup;
 import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
@@ -24,13 +18,11 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class StatisticsFragment extends Fragment {
 
     private StatisticsViewModel statisticsViewModel;
-    private AppDatabase db;
     private LineChart dayChart;
     private LineChart weekChart;
 
@@ -40,14 +32,12 @@ public class StatisticsFragment extends Fragment {
                 ViewModelProviders.of(this).get(StatisticsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_statistics, container, false);
 
-        db = MainActivity.db;
         dayChart = (LineChart)root.findViewById(R.id.dayChart);
         setChartAttribute(dayChart);
         weekChart = (LineChart)root.findViewById(R.id.weekChart);
         setChartAttribute(weekChart);
 
         drawDayChart();
-        drawWeekChart();
 
         MainActivity.fragment = this;
 
@@ -77,22 +67,30 @@ public class StatisticsFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Calendar from = Calendar.getInstance();
+                from.add(Calendar.DATE,-7);
+                from.set(Calendar.HOUR_OF_DAY,0);
+                from.set(Calendar.MINUTE,0);
+                from.set(Calendar.SECOND,0);
+
                 Calendar to = Calendar.getInstance();
                 to.add(Calendar.DATE,-1);
                 to.set(Calendar.HOUR_OF_DAY,23);
                 to.set(Calendar.MINUTE,59);
                 to.set(Calendar.SECOND,59);
-                final List<IndoorAirGroup> li = db.indoorAirDao().getGroupByDayBetweenDates(to.getTime());
+                final List<IndoorAirGroup> li = AppDatabase.getInstance(getContext()).indoorAirDao().getGroupByDayBetweenDatesWithTimeTable(from.getTime(), to.getTime());
                 try {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            statisticsViewModel.updateDayChart(dayChart,li);
+                            statisticsViewModel.updateDayChart(dayChart, li);
                         }
                     });
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                drawWeekChart();
             }
         }).start();
     }
@@ -101,16 +99,23 @@ public class StatisticsFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Calendar from = Calendar.getInstance();
+                from.add(Calendar.WEEK_OF_YEAR,-7);
+                from.set(Calendar.HOUR_OF_DAY,0);
+                from.set(Calendar.MINUTE,0);
+                from.set(Calendar.SECOND,0);
+
                 Calendar to = Calendar.getInstance();
-                final List<IndoorAirGroup> li = db.indoorAirDao().getGroupByWeekBetweenDates(to.getTime());
+
+                final List<IndoorAirGroup> li = AppDatabase.getInstance(getContext()).indoorAirDao().getGroupByDayBetweenWeeksWithTimeTable(from.getTime(), to.getTime());
                 try {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            statisticsViewModel.updateWeekChart(weekChart,li);
+                            statisticsViewModel.updateWeekChart(weekChart, li);
                         }
                     });
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

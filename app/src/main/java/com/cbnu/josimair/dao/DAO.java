@@ -4,6 +4,7 @@ import androidx.room.*;
 
 import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.IndoorAirGroup;
+import com.cbnu.josimair.Model.Timetable;
 
 import java.util.Date;
 import java.util.List;
@@ -22,19 +23,24 @@ public interface DAO {
     @Insert
     void insertAll(IndoorAir... indoorAir);
 
+    @Insert
+    void insertAll(Timetable... timetables);
+
+    @Query("SELECT count(*) FROM " +
+            "Timetable "
+    )
+    int isRaady();
+
     @Delete
     void delete(IndoorAir indoorAir);
 
-    @Query("SELECT * FROM " +
-            "(SELECT strftime('%m.%d',time) as time, avg(value) as value " +
+    @Query(" SELECT strftime('%H',time) as time, avg(value) as value " +
             "FROM indoorair " +
-            "WHERE time <= :to " +
-            "GROUP BY strftime('%m%d',time) " +
-            "ORDER BY strftime('%m%d',time) DESC " +
-            "LIMIT 7) " +
-            "ORDER BY time ASC"
-    )
-    List<IndoorAirGroup> getGroupByDayBetweenDates(Date to);
+            "WHERE time Between :from and :to " +
+            "GROUP BY strftime('%m%d%H',time) " +
+            "ORDER BY strftime('%m%d%H',time) DESC " +
+            "LIMIT 24  ")
+    List<IndoorAirGroup> getGroupByHourBetweenDates(Date from, Date to);
 
     @Query("SELECT timetable.h as time, origin.v as value " +
             "FROM " +
@@ -56,14 +62,37 @@ public interface DAO {
             "ON timetable.h = origin.h")
     List<IndoorAirGroup> getGroupByHourBetweenDatesWithTimeTable(Date from, Date to);
 
+    @Query("SELECT * FROM " +
+            "   (SELECT strftime('%m.%d',time) as time, avg(value) as value " +
+            "    FROM indoorair " +
+            "    WHERE time <= :to " +
+            "    GROUP BY strftime('%m%d',time) " +
+            "    ORDER BY strftime('%m%d',time) DESC " +
+            "    LIMIT 7) " +
+            "ORDER BY time ASC"
+    )
+    List<IndoorAirGroup> getGroupByDayBetweenDates(Date to);
 
-    @Query(" SELECT strftime('%H',time) as time, avg(value) as value " +
-            "FROM indoorair " +
-            "WHERE time Between :from and :to " +
-            "GROUP BY strftime('%m%d%H',time) " +
-            "ORDER BY strftime('%m%d%H',time) DESC " +
-            "LIMIT 24  ")
-    List<IndoorAirGroup> getGroupByHourBetweenDates(Date from, Date to);
+    @Query("SELECT t.time as time, origin.v as value " +
+            "FROM " +
+            "   (SELECT strftime('%m.%d',time) as time " +
+            "    FROM timetable " +
+                "WHERE time Between :from and :to " +
+            "    GROUP BY strftime('%m.%d',time) " +
+            "    ORDER BY time ASC " +
+            "    LIMIT 7 " +
+            ") as t " +
+            "LEFT OUTER JOIN" +
+            "   (SELECT strftime('%m.%d',time) as time, avg(value) as v " +
+            "    FROM IndoorAir " +
+            "    GROUP BY strftime('%m.%d',time)" +
+            "    LIMIT 7 " +
+            ") as origin " +
+            "ON t.time = origin.time "
+    )
+    List<IndoorAirGroup> getGroupByDayBetweenDatesWithTimeTable(Date from, Date to);
+
+
 
     @Query("SELECT * FROM " +
             "(SELECT strftime('%m%d',time) as time, avg(value) as value " +
@@ -74,6 +103,26 @@ public interface DAO {
             "LIMIT 7 ) " +
             "ORDER BY time ASC ")
     List<IndoorAirGroup> getGroupByWeekBetweenDates(Date to);
+
+    @Query("SELECT t.time as time, origin.v as value " +
+            "FROM " +
+            "   (SELECT strftime('%m.%d',time) as time " +
+            "    FROM timetable " +
+            "WHERE time Between :from and :to " +
+            "    GROUP BY strftime('%W',time) " +
+            "    ORDER BY time ASC " +
+            "    LIMIT 7 " +
+            ") as t " +
+            "LEFT OUTER JOIN" +
+            "   (SELECT strftime('%m.%d',time) as time, avg(value) as v " +
+            "    FROM IndoorAir " +
+            "    WHERE time Between :from and :to " +
+            "    GROUP BY strftime('%W',time)" +
+            ") as origin " +
+            "ON t.time = origin.time "
+    )
+    List<IndoorAirGroup> getGroupByDayBetweenWeeksWithTimeTable(Date from, Date to);
+
 }
 
 
