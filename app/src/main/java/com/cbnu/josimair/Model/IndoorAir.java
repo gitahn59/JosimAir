@@ -24,25 +24,23 @@ public class IndoorAir {
 
     @ColumnInfo(name = "value")
     private float value;
-
     public float getValue() {
-        return value;
+        return this.value;
     }
-
     public void setValue(float value) {
         this.value = value;
     }
 
     @ColumnInfo(name = "quality")
     private int quality;
-
     public int getQuality() {
         return quality;
     }
-
     public void setQuality(int quality) {
         this.quality = quality;
     }
+
+    private static IndoorAir lastKnownIndoorAir = null;
 
     public IndoorAir(float value){
         this.time = new Date(System.currentTimeMillis());
@@ -54,5 +52,13 @@ public class IndoorAir {
         }else{
             quality = 3;
         }
+    }
+
+    public static synchronized IndoorAir getLastKnownIndoorAir(){
+        return lastKnownIndoorAir;
+    }
+
+    public static synchronized void setLastKnownIndoorAir(IndoorAir last) {
+        lastKnownIndoorAir = last;
     }
 }

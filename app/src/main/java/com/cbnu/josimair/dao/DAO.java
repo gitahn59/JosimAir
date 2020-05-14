@@ -77,7 +77,7 @@ public interface DAO {
             "FROM " +
             "   (SELECT strftime('%m.%d',time) as time " +
             "    FROM timetable " +
-                "WHERE time Between :from and :to " +
+            "    WHERE time Between :from and :to " +
             "    GROUP BY strftime('%m.%d',time) " +
             "    ORDER BY time ASC " +
             "    LIMIT 7 " +
@@ -85,7 +85,8 @@ public interface DAO {
             "LEFT OUTER JOIN" +
             "   (SELECT strftime('%m.%d',time) as time, avg(value) as v " +
             "    FROM IndoorAir " +
-            "    GROUP BY strftime('%m.%d',time)" +
+            "    WHERE time Between :from and :to " +
+            "    GROUP BY strftime('%m.%d',time) " +
             "    LIMIT 7 " +
             ") as origin " +
             "ON t.time = origin.time "
@@ -108,7 +109,7 @@ public interface DAO {
             "FROM " +
             "   (SELECT strftime('%m.%d',time) as time " +
             "    FROM timetable " +
-            "WHERE time Between :from and :to " +
+            "    WHERE time Between :from and :to " +
             "    GROUP BY strftime('%W',time) " +
             "    ORDER BY time ASC " +
             "    LIMIT 7 " +

@@ -71,7 +71,7 @@ public class AirInformationFragment extends Fragment {
         NO2_params.height = metrics.heightPixels/15;
         NO2_params.width = dust_params.height;
 
-        updateIndoorAirInfo(MainActivity.indoorAir);
+        updateIndoorAirInfo(IndoorAir.getLastKnownIndoorAir());
         updateOutdoorAirInfo();
 
         MainActivity.fragment = this;

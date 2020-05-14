@@ -41,6 +41,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     public Communication communication = null;
     public static RestAPIService svc = null;
     public static OutdoorAir outdoorAir = null;
-    public static IndoorAir indoorAir = null;
     public static Fragment fragment;
 
     final Handler mCommunicationHandler = new CommunicationHandler();
@@ -60,16 +60,15 @@ public class MainActivity extends AppCompatActivity {
     final Handler mNetworkHandler = new NetworkHandler();
     public final PermissionListener permissionListener = new LocationPermissionListener();
 
-
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive (Context context, Intent intent) {
-        String action = intent.getAction();
-        if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-            if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON){
-                // Bluetooth is disconnected, do handling here
-                Log.v("JosimAir","BT ON");
+            String action = intent.getAction();
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+                if(intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON){
+                    // Bluetooth is disconnected, do handling here
+                    Log.v("JosimAir","BT ON");
+                }
             }
-        }
         }
     };
 
@@ -185,8 +184,10 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         IndoorAir[] airs = new IndoorAir [7];
                         for(int i=0; i<7; i++){
-                            airs[i] = new IndoorAir((float)Math.random() * 15);
-                            Date d = new Date(System.currentTimeMillis()-86400000*(i));
+                            airs[i] = new IndoorAir((float)Math.random() * 40);
+                            Calendar now = Calendar.getInstance();
+                            now.add(Calendar.DATE,-i);
+                            Date d = now.getTime();
                             airs[i].setTime(d);
                         }
                         AppDatabase.getInstance(getApplicationContext()).indoorAirDao().insertAll(airs);
@@ -205,7 +206,8 @@ public class MainActivity extends AppCompatActivity {
                 if(communication.getState() == Communication.STATE_CONNECTED) {
                     communication.write(bytes);
                 }else{
-                    mCommunicationHandler.obtainMessage(Constants.MESSAGE_READ, 4, -1, bytes).sendToTarget();
+                    IndoorAir indoorAir = new IndoorAir((int)(Math.random()*40));
+                    mCommunicationHandler.obtainMessage(Constants.MESSAGE_READ,indoorAir).sendToTarget();
                 }
                 return true;
             case R.id.action_btClient_btn:
@@ -225,18 +227,23 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
+    /**
+     * Handler
+     *
+     * 실내 대기정로를 했을 때 생성되는 Message를 처리하는 handler
+     */
     private class CommunicationHandler extends Handler{
         @Override
         public void handleMessage(Message msg) {
             String className = fragment.getClass().getSimpleName().trim();
             switch(msg.what){
                 case Constants.MESSAGE_READ:
+                    IndoorAir indoorAir = (IndoorAir)msg.obj;
+                    IndoorAir.setLastKnownIndoorAir(indoorAir);
                     if(className.equals("HomeFragment")){
-                        MainActivity.indoorAir = new IndoorAir((int)(Math.random()*40));
-                        ((HomeFragment)fragment).updateIndoorAirInfo(MainActivity.indoorAir);
+                        ((HomeFragment)fragment).updateIndoorAirInfo(indoorAir);
                     }else if(className.equals("AirInformationFragment")){
-                        MainActivity.indoorAir = new IndoorAir((int)(Math.random()*40));
-                        ((AirInformationFragment)fragment).updateIndoorAirInfo(MainActivity.indoorAir);
+                        ((AirInformationFragment)fragment).updateIndoorAirInfo(indoorAir);
                     }
                     break;
                 case Constants.MESSAGE_TOAST:
@@ -246,6 +253,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handler
+     *
+     * 외부 대기정로를 했을 때 생성되는 Message를 처리하는 handler
+     */
     private class RestAPIServiceHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -264,6 +276,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handler
+     *
+     * GPS 위치 정보를 수신 했을 때 생성되는 Message를 처리하는 handler
+     */
     private class LocationHandler extends  Handler{
         @Override
         public void handleMessage(Message msg) {
@@ -278,6 +295,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handler
+     *
+     * Network자원의 변화 상태에 따른 Message를 처리하는 handler
+     */
     private class NetworkHandler extends Handler{
         @Override
         public void handleMessage(Message msg) {
@@ -290,6 +312,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Listener
+     *
+     * 위치 정보에 대한 Permission의 변화를 처리하는 Listener
+     */
     private class LocationPermissionListener implements PermissionListener{
         @Override
         public void onPermissionGranted() {

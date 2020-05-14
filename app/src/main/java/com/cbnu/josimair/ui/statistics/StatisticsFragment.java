@@ -18,6 +18,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class StatisticsFragment extends Fragment {

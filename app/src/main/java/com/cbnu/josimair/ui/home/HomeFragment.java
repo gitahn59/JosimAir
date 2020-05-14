@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment {
 
         setChartAttribute(hourChart);
         drawHourChart();
-        updateIndoorAirInfo(MainActivity.indoorAir);
+        updateIndoorAirInfo(IndoorAir.getLastKnownIndoorAir());
         updateOutdoorAirInfo();
         MainActivity.fragment = this;
         return root;
