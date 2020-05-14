@@ -49,15 +49,16 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
-    public Communication communication = null;
-    public static RestAPIService svc = null;
-    public static Fragment fragment;
+    Communication communication = null;
+    RestAPIService svc = null;
 
     final Handler mCommunicationHandler = new CommunicationHandler();
     final Handler mRestAPIServiceHandler = new RestAPIServiceHandler();
     final Handler mLocationHandler = new LocationHandler();
     final Handler mNetworkHandler = new NetworkHandler();
-    public final PermissionListener permissionListener = new LocationPermissionListener();
+    final PermissionListener permissionListener = new LocationPermissionListener();
+
+    public static Fragment fragment;
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive (Context context, Intent intent) {
@@ -85,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        if(communication == null) communication = new Communication(this, mCommunicationHandler);
-        svc = new RestAPIService(this, mRestAPIServiceHandler);
+        communication = Communication.getInstance(getApplicationContext(), mCommunicationHandler);
+        svc = RestAPIService.getInstance(getApplicationContext(), mRestAPIServiceHandler);
 
         new Thread(new Runnable() {
             @Override

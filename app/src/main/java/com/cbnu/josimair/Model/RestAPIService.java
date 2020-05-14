@@ -4,11 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Pair;
-
 import com.cbnu.josimair.R;
-import com.cbnu.josimair.ui.MainActivity;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -21,15 +17,24 @@ public class RestAPIService {
     private Context mContext;
     private Handler mHandler;
 
+    private static RestAPIService INSTANCE;
+
     /**
-     * 생성자
+     * private 생성자
      *
      * @param context Application context
      * @param handler message를 처리할 handler
      */
-    public RestAPIService(Context context, Handler handler){
+    private RestAPIService(Context context, Handler handler){
         this.mContext = context;
         mHandler = handler;
+    }
+
+    public static synchronized RestAPIService getInstance(Context context, Handler handler){
+        if(INSTANCE == null){
+            INSTANCE = new RestAPIService(context,handler);
+        }
+        return INSTANCE;
     }
 
     /**

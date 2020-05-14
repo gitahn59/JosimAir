@@ -27,16 +27,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-
 import com.cbnu.josimair.R;
 import com.cbnu.josimair.ui.bluetooth.DeviceListActivity;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
 public class Communication {
+    private  static Communication INSTANCE;
+
+    public static synchronized Communication getInstance(Context context, Handler handler) {
+        if(INSTANCE==null){
+            INSTANCE = new Communication(context, handler);
+        }
+        return INSTANCE;
+    }
 
     private static final String TAG = "JosimAirBluetooth";
     private static final String NAME_INSECURE = "JosimAirInsecure";
@@ -63,12 +69,12 @@ public class Communication {
     public final static int RESULT_CODE_BTLIST = 2002;
 
     /**
-     * 생성자. 새로운 Communication Session 준비
+     * private 생성자. 새로운 Communication Session 준비
      *
      * @param context The UI Activity Context
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public Communication(Context context, Handler handler){
+    private Communication(Context context, Handler handler){
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mContext = context;
         mHandler = handler;
