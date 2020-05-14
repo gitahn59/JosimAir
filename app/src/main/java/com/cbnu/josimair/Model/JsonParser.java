@@ -15,6 +15,12 @@ public class JsonParser {
         this.json = json;
     }
 
+    /**
+     * jObject로 부터 이름이 name 인 속성의 값을 가져온다
+     *
+     * @param jObject json Object
+     * @param name attribute name
+     */
     public float getValue(JSONObject jObject, String name){
         try {
             return (float)jObject.getDouble(name);
@@ -23,6 +29,12 @@ public class JsonParser {
         }
     }
 
+    /**
+     * jObject로 부터 이름이 name 인 속성의 값을 가져온다
+     *
+     * @param jObject json Object
+     * @param name attribute name
+     */
     public int getGrade(JSONObject jObject, String name){
         try {
             return jObject.getInt(name);
@@ -31,6 +43,11 @@ public class JsonParser {
         }
     }
 
+    /**
+     * json 데이터에서 외부 대기 정보를 추출한다
+     *
+     * @param stationName attribute name
+     */
     public OutdoorAir getOutdoorAir(String stationName){
         float value = -1;
         int quality = -1;
@@ -79,28 +96,33 @@ public class JsonParser {
     }
 
 
-    public Pair<Double, Double> getTMLocation(){
-        Double first=0.0;
-        Double second=0.0;
+    /**
+     * json 데이터에서 TMLocation 을 추출한다
+     */
+    public RestAPIService.TMLocation getTMLocation(){
+        Double x = 0.0, y = 0.0;
         try {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray jarray = jsonObject.getJSONArray("documents");
             for(int i=0; i < jarray.length(); i++){
                 JSONObject jObject = jarray.getJSONObject(i);
-                first= Double.parseDouble(jObject.getString("x"));
-                second= Double.parseDouble(jObject.getString("y"));
+                x = Double.parseDouble(jObject.getString("x"));
+                y = Double.parseDouble(jObject.getString("y"));
                 break;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         } finally{
-            if(first==0)
+            if(x==0)
                 return null;
             else
-                return new Pair<Double, Double>(first,second);
+                return new RestAPIService.TMLocation(x,y);
         }
     }
 
+    /**
+     * json 데이터에서 최근접 관측소의 이름을 추출한다
+     */
     public String getNearByStation(){
         String stationName=null;
         try {

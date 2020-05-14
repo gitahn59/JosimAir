@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
     public Communication communication = null;
     public static RestAPIService svc = null;
-    public static OutdoorAir outdoorAir = null;
     public static Fragment fragment;
 
     final Handler mCommunicationHandler = new CommunicationHandler();
@@ -104,8 +103,7 @@ public class MainActivity extends AppCompatActivity {
         LocationFinder lf = LocationFinder.getInstance(getApplicationContext(),mLocationHandler);
         if(rc.isNetworkEnable() && lf.isEnabled()){
             lf.requestLocationUpdates();
-            svc.setLocation(lf.getLocation());
-            svc.start();
+            svc.start(lf.getLocation());
         }
     }
 
@@ -230,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Handler
      *
-     * 실내 대기정로를 했을 때 생성되는 Message를 처리하는 handler
+     * 실내 대기정보를 수신 했을 때 생성되는 Message를 처리하는 handler
      */
     private class CommunicationHandler extends Handler{
         @Override
@@ -256,18 +254,20 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Handler
      *
-     * 외부 대기정로를 했을 때 생성되는 Message를 처리하는 handler
+     * 외부 대기정보를 수신 했을 때 생성되는 Message를 처리하는 handler
      */
     private class RestAPIServiceHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             String className = fragment.getClass().getSimpleName().trim();
+            OutdoorAir last = (OutdoorAir)msg.obj;
+            OutdoorAir.setLastKnownOutdoorAir(last);
             switch (msg.what) {
                 case Constants.MESSAGE_READ:
                     if (className.equals("HomeFragment")) {
-                        ((HomeFragment) fragment).updateOutdoorAirInfo();
+                        ((HomeFragment) fragment).updateOutdoorAirInfo(last);
                     }else if (className.equals("AirInformationFragment")) {
-                        ((AirInformationFragment) fragment).updateOutdoorAirInfo();
+                        ((AirInformationFragment) fragment).updateOutdoorAirInfo(last);
                     }
                     break;
                 case Constants.MESSAGE_FAILED:
@@ -288,8 +288,8 @@ public class MainActivity extends AppCompatActivity {
                 ResourceChecker rc = ResourceChecker.getInstance(getApplicationContext(), mNetworkHandler);
                 LocationFinder locationFinder = LocationFinder.getInstance(getApplicationContext(), mLocationHandler);
                 if (rc.isNetworkEnable()) {
-                    svc.setLocation((Location) msg.obj);
-                    svc.start();
+                    Location last = (Location)msg.obj;
+                    svc.start(last);
                 }
             }
         }
@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Handler
      *
-     * Network자원의 변화 상태에 따른 Message를 처리하는 handler
+     * Network 자원의 변화 상태에 따른 Message를 처리하는 handler
      */
     private class NetworkHandler extends Handler{
         @Override

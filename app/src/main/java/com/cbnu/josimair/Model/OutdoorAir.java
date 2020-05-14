@@ -6,7 +6,6 @@ import java.util.List;
 
 public class OutdoorAir {
     //Outdoor Air Infomation factor - s
-
     private String stationName;
 
     private String mangName;
@@ -35,6 +34,19 @@ public class OutdoorAir {
     private float khaiValue;
     private int khaiGrade;
     //Outdoor Air Infomation factor - e
+
+    /**
+     * 가장 최근에 요청한 외부대기 정보
+     */
+    private static OutdoorAir lastKnownOutdoorAir;
+    public static synchronized OutdoorAir getLastKnownOutdoorAir(){
+        return lastKnownOutdoorAir;
+    }
+
+    public static synchronized void setLastKnownOutdoorAir(OutdoorAir last){
+        lastKnownOutdoorAir = last;
+    }
+
     public OutdoorAir(String stationName){
         this.stationName = stationName;
     }

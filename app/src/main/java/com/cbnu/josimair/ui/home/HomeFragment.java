@@ -1,13 +1,11 @@
 package com.cbnu.josimair.ui.home;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.cbnu.josimair.Model.AppDatabase;
 import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.IndoorAirGroup;
+import com.cbnu.josimair.Model.OutdoorAir;
 import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 import com.github.mikephil.charting.charts.LineChart;
@@ -82,7 +81,7 @@ public class HomeFragment extends Fragment {
         setChartAttribute(hourChart);
         drawHourChart();
         updateIndoorAirInfo(IndoorAir.getLastKnownIndoorAir());
-        updateOutdoorAirInfo();
+        updateOutdoorAirInfo(OutdoorAir.getLastKnownOutdoorAir());
         MainActivity.fragment = this;
         return root;
     }
@@ -92,14 +91,30 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
     }
 
+    /**
+     * view 에 실내 대기정보를 전달하여 화면을 업데이트 한다
+     *
+     * @param indoorAir 실내 대기정보
+     */
     public void updateIndoorAirInfo(final IndoorAir indoorAir){
         homeViewModel.updateAirInfo(airInfoTextView, indoorAir, faceImageView);
     }
 
-    public void updateOutdoorAirInfo(){
-        homeViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, dateTextView, MainActivity.outdoorAir);
+    /**
+     * view 에 실외 대기정보를 전달하여 화면을 업데이트 한다
+     *
+     * @param outdoorAir 실외 대기정보
+     */
+    public void updateOutdoorAirInfo(OutdoorAir outdoorAir){
+        homeViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, dateTextView, outdoorAir);
     }
 
+    /**
+     * 현재 시간(H)을 기준으로 정렬한다
+     *
+     * @param src 정렬 대상 List
+     * @param now 현재 시간(H)
+     */
     private ArrayList<IndoorAirGroup> sortOrderbyTime(List<IndoorAirGroup> src, int now){
         ArrayList<IndoorAirGroup> li = new ArrayList<IndoorAirGroup>();
         ArrayList<IndoorAirGroup> temp = new ArrayList<IndoorAirGroup>();
@@ -115,6 +130,9 @@ public class HomeFragment extends Fragment {
         return li;
     }
 
+    /**
+     * 시간 통계 그래프를 그린다
+     */
     public void drawHourChart(){
         new Thread(new Runnable() {
             @Override
@@ -138,6 +156,9 @@ public class HomeFragment extends Fragment {
         }).start();
     }
 
+    /**
+     * 통계 그래프의 속성을 설정한다
+     */
     public void setChartAttribute(LineChart chart){
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);

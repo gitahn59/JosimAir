@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.cbnu.josimair.Model.IndoorAir;
+import com.cbnu.josimair.Model.OutdoorAir;
 import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 
@@ -72,7 +73,7 @@ public class AirInformationFragment extends Fragment {
         NO2_params.width = dust_params.height;
 
         updateIndoorAirInfo(IndoorAir.getLastKnownIndoorAir());
-        updateOutdoorAirInfo();
+        updateOutdoorAirInfo(OutdoorAir.getLastKnownOutdoorAir());
 
         MainActivity.fragment = this;
         return root;
@@ -82,7 +83,7 @@ public class AirInformationFragment extends Fragment {
         airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, indoorAir, faceImageView);
     }
 
-    public void updateOutdoorAirInfo(){
-        airInformationViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, dateTextView, MainActivity.outdoorAir);
+    public void updateOutdoorAirInfo(OutdoorAir outdoorAir){
+        airInformationViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, dateTextView, outdoorAir);
     }
 }
