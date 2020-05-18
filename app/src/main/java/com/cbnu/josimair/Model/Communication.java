@@ -433,9 +433,14 @@ public class Communication {
                 try {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
-
+                    int value = (int)(Math.random()*40);
+                    /*
+                    int value = bytes to int
+                    구현해야 할 부분
+                    */
+                    IndoorAir indoorAir = new IndoorAir(value);
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                    mHandler.obtainMessage(Constants.MESSAGE_READ,indoorAir).sendToTarget();
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
