@@ -161,8 +161,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="16dp"
-                android:background="#ffffff"
-                android:gravity="center_vertical">
+                android:background="@drawable/chartshape"
+                android:gravity="center_vertical"
+                >
 
             </com.github.mikephil.charting.charts.LineChart>
         </LinearLayout>

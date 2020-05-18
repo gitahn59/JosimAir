@@ -32,6 +32,8 @@ public class AirInformationFragment extends Fragment {
     private TextView microDustTextView;
     private TextView no2TextView;
     private TextView dateTextView;
+    private TextView ventilation_status;
+    private TextView ventilation_time;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -51,6 +53,8 @@ public class AirInformationFragment extends Fragment {
         microDustTextView = (TextView) root.findViewById(R.id.microDustValueTextView);
         no2TextView = (TextView) root.findViewById(R.id.No2ValueTextView);
         dateTextView = (TextView) root.findViewById(R.id.date);
+        ventilation_status = (TextView) root.findViewById(R.id.status);
+        ventilation_time = (TextView) root.findViewById(R.id.ventilation_time);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -84,6 +88,6 @@ public class AirInformationFragment extends Fragment {
     }
 
     public void updateOutdoorAirInfo(OutdoorAir outdoorAir){
-        airInformationViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, dateTextView, outdoorAir);
+        airInformationViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, dateTextView, ventilation_status, ventilation_time, outdoorAir);
     }
 }

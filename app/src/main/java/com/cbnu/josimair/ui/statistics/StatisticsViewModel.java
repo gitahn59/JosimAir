@@ -56,7 +56,7 @@ public class StatisticsViewModel extends ViewModel {
             entries.add(new Entry(airs.get(i).getValue(),i));
         }
 
-        LineDataSet lineDataSet = new LineDataSet(entries, "평균값");
+        LineDataSet lineDataSet = new LineDataSet(entries, "PPM");
         setLineDataSetAttribute(lineDataSet);
 
         ArrayList<String> labels = new ArrayList<String>();
@@ -75,7 +75,7 @@ public class StatisticsViewModel extends ViewModel {
             entries.add(new Entry(airs.get(i).getValue(),i));
         }
 
-        LineDataSet lineDataSet = new LineDataSet(entries, "평균값");
+        LineDataSet lineDataSet = new LineDataSet(entries, "PPM");
         setLineDataSetAttribute(lineDataSet);
 
         ArrayList<String> labels = new ArrayList<String>();

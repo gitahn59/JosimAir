@@ -58,9 +58,9 @@ public class HomeViewModel extends ViewModel {
 
     public void updateOutdoorAirInfo(TextView dust, TextView microDust, TextView no2, TextView date, OutdoorAir air){
         if(air==null) {
-            dust.setText("㎍/㎥");
-            microDust.setText("㎍/㎥");
-            no2.setText("ppm");
+            dust.setText("등급");
+            microDust.setText("등급");
+            no2.setText("등급");
             date.setText("측정시간");
         }
         else{
@@ -127,7 +127,7 @@ public class HomeViewModel extends ViewModel {
             entries.add(new Entry(airs.get(i).getValue(),i));
         }
 
-        LineDataSet lineDataSet = new LineDataSet(entries, "평균값");
+        LineDataSet lineDataSet = new LineDataSet(entries, "PPM");
         setLineDataSetAttribute(lineDataSet);
 
         ArrayList<String> labels = new ArrayList<String>();

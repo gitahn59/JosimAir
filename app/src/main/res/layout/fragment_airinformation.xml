@@ -68,7 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/empty_string"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:id="@+id/micro_dust_title"
@@ -181,7 +182,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/ventilation"
-            android:text="30분"
+            android:text="@string/empty_string"
             android:textColor="@color/colorAccent"
             android:textSize="30dp"
             android:layout_centerHorizontal="true" />
