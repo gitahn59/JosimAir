@@ -92,7 +92,7 @@
                 android:layout_below="@id/micro_dust"
                 android:layout_alignLeft="@id/micro_dust"
                 android:layout_centerHorizontal="true"
-                android:text="㎍/㎥" />
+                android:text="측정중" />
 
             <TextView
                 android:id="@+id/dust_title"
@@ -119,7 +119,7 @@
                 android:layout_below="@id/dust"
                 android:layout_alignLeft="@id/dust"
                 android:layout_centerHorizontal="true"
-                android:text="㎍/㎥" />
+                android:text="측정중" />
 
             <TextView
                 android:id="@+id/NO2_title"
@@ -143,7 +143,7 @@
                 android:id="@+id/No2ValueTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ppm"
+                android:text="측정중"
                 android:layout_alignLeft="@id/NO2"
                 android:layout_below="@id/NO2"
                 android:layout_centerHorizontal="true" />
