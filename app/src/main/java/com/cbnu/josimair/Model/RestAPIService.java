@@ -103,7 +103,7 @@ public class RestAPIService {
      *
      * @param last GPS Location
      */
-    private TMLocation getTMLocation(final Location last){
+    public TMLocation getTMLocation(final Location last){
         try {
             String json=getJsonResult(makeTMLocationUrl(last.getLongitude(),last.getLatitude()),"KakaoAK "+ kakao_key);
             JsonParser jp = new JsonParser(json);
@@ -118,7 +118,7 @@ public class RestAPIService {
      *
      * @param tmLocation TM Location
      */
-    private String getNearByStationInfo(TMLocation tmLocation){
+    public String getNearByStationInfo(TMLocation tmLocation){
         try {
             String json=getJsonResult(makeNearbyStationUrl(tmLocation),null);
             JsonParser jp = new JsonParser(json);
@@ -133,7 +133,7 @@ public class RestAPIService {
      *
      * @param stationName 관측소 이름
      */
-    private OutdoorAir getOutdoorAir(String stationName){
+    public OutdoorAir getOutdoorAir(String stationName){
         try {
             String json=getJsonResult(makeOutdoorAirUrl(stationName), null);
             JsonParser jp = new JsonParser(json);
