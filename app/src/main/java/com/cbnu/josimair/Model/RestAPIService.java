@@ -11,8 +11,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class RestAPIService {
-    private static final String airkorea_key = "Ykpt/foyi49PDgJhtLVWnE1QB8R1t08idlq1Yieti3brksGN/7qszre1MeWYvX3uNXGx4V8PkUSzkeVU0g837Q==";
-    private static final String kakao_key = "8d5d55fd6dd1923ff7dafb8f2ffc2bd2";
+    private static final String airkorea_key = "yourkey";
+    private static final String kakao_key = "yourkey";
 
     private Context mContext;
     private Handler mHandler;
@@ -48,7 +48,7 @@ public class RestAPIService {
             public void run() {
                 TMLocation tmLocation = getTMLocation(last);
                 if(tmLocation!=null) {
-                    String stationName = getNearByStationInfo(tmLocation);
+                     String stationName = getNearByStationInfo(tmLocation);
                     if (stationName!=null){
                         OutdoorAir outdoorAir = getOutdoorAir(stationName);
                         if(outdoorAir != null){

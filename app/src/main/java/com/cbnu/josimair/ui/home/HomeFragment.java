@@ -17,6 +17,7 @@ import com.cbnu.josimair.Model.AppDatabase;
 import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.IndoorAirGroup;
 import com.cbnu.josimair.Model.OutdoorAir;
+import com.cbnu.josimair.Model.StatisticsService;
 import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 import com.github.mikephil.charting.charts.LineChart;
@@ -110,42 +111,20 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * 현재 시간(H)을 기준으로 정렬한다
-     *
-     * @param src 정렬 대상 List
-     * @param now 현재 시간(H)
-     */
-    private ArrayList<IndoorAirGroup> sortOrderbyTime(List<IndoorAirGroup> src, int now){
-        ArrayList<IndoorAirGroup> li = new ArrayList<IndoorAirGroup>();
-        ArrayList<IndoorAirGroup> temp = new ArrayList<IndoorAirGroup>();
-        for(IndoorAirGroup i : src){
-            int h = Integer.parseInt(i.getDay());
-            if(h<=now) temp.add(i);
-            else li.add(i);
-        }
-
-        for(IndoorAirGroup i : temp) {
-            li.add(i);
-        }
-        return li;
-    }
-
-    /**
      * 시간 통계 그래프를 그린다
      */
     public void drawHourChart(){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Calendar to = Calendar.getInstance();
-                Calendar from = Calendar.getInstance();
-                from.add(Calendar.HOUR, -24);
-                List<IndoorAirGroup> li = AppDatabase.getInstance(getContext()).indoorAirDao().getGroupByHourBetweenDatesWithTimeTable(from.getTime(),to.getTime());
-                final List<IndoorAirGroup> fli = sortOrderbyTime(li,to.get(Calendar.HOUR_OF_DAY));
+                StatisticsService ss = new StatisticsService(getContext());
+                final List<IndoorAirGroup> fli =  ss.getHourStatisticsData();
+
                 try {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
                             homeViewModel.updateHourChart(hourChart, fli);
                         }
                     });

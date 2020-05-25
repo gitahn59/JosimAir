@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.cbnu.josimair.Model.IndoorAirGroup;
+import com.cbnu.josimair.Model.StatisticsService;
 import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 import com.cbnu.josimair.Model.AppDatabase;
@@ -68,18 +69,8 @@ public class StatisticsFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Calendar from = Calendar.getInstance();
-                from.add(Calendar.DATE,-7);
-                from.set(Calendar.HOUR_OF_DAY,0);
-                from.set(Calendar.MINUTE,0);
-                from.set(Calendar.SECOND,0);
-
-                Calendar to = Calendar.getInstance();
-                to.add(Calendar.DATE,-1);
-                to.set(Calendar.HOUR_OF_DAY,23);
-                to.set(Calendar.MINUTE,59);
-                to.set(Calendar.SECOND,59);
-                final List<IndoorAirGroup> li = AppDatabase.getInstance(getContext()).indoorAirDao().getGroupByDayBetweenDatesWithTimeTable(from.getTime(), to.getTime());
+                StatisticsService ss = new StatisticsService(getContext());
+                final List<IndoorAirGroup> li = ss.getDayStatisticsData();
                 try {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -100,15 +91,8 @@ public class StatisticsFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Calendar from = Calendar.getInstance();
-                from.add(Calendar.WEEK_OF_YEAR,-7);
-                from.set(Calendar.HOUR_OF_DAY,0);
-                from.set(Calendar.MINUTE,0);
-                from.set(Calendar.SECOND,0);
-
-                Calendar to = Calendar.getInstance();
-
-                final List<IndoorAirGroup> li = AppDatabase.getInstance(getContext()).indoorAirDao().getGroupByDayBetweenWeeksWithTimeTable(from.getTime(), to.getTime());
+                StatisticsService ss = new StatisticsService(getContext());
+                final List<IndoorAirGroup> li = ss.getWeekStatisticsData();
                 try {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
