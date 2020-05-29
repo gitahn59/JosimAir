@@ -85,9 +85,17 @@ public class AirInformationFragment extends Fragment {
 
     public void updateIndoorAirInfo(final IndoorAir indoorAir){
         airInformationViewModel.updateAirInfo(airInfoTextView, airQualityTextView, indoorAir, faceImageView);
+        OutdoorAir outdoorAir = OutdoorAir.getLastKnownOutdoorAir();
+        if(indoorAir !=null && outdoorAir!=null){
+            airInformationViewModel.updateVentilation(ventilation_status, ventilation_time, indoorAir, outdoorAir);
+        }
     }
 
     public void updateOutdoorAirInfo(OutdoorAir outdoorAir){
-        airInformationViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, dateTextView, ventilation_status, ventilation_time, outdoorAir);
+        airInformationViewModel.updateOutdoorAirInfo(dustTextView, microDustTextView, no2TextView, dateTextView, outdoorAir);
+        IndoorAir indoorAir = IndoorAir.getLastKnownIndoorAir();
+        if(outdoorAir !=null && indoorAir!=null){
+            airInformationViewModel.updateVentilation(ventilation_status, ventilation_time, indoorAir, outdoorAir);
+        }
     }
 }

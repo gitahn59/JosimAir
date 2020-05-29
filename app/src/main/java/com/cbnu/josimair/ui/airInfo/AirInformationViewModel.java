@@ -44,7 +44,7 @@ public class AirInformationViewModel extends ViewModel {
         quality.setText("" + air.getValue());
     }
 
-    public void updateOutdoorAirInfo(TextView dust, TextView microDust, TextView no2, TextView date, TextView ventilation_status, TextView ventilation_time, OutdoorAir air){
+    public void updateOutdoorAirInfo(TextView dust, TextView microDust, TextView no2, TextView date, OutdoorAir air){
 
         if(air==null) {
             dust.setText("㎍/㎥");
@@ -57,58 +57,59 @@ public class AirInformationViewModel extends ViewModel {
             microDust.setText(air.getPm10Value()+" ㎍/㎥");
             no2.setText(air.getNo2Value()+" ppm");
             date.setText(df.format("MM/dd",air.getDataTime()).toString());
-            }
+        }
+    }
 
-        if(IndoorAir.getLastKnownIndoorAir() != null) {
-            IndoorAir inAir = IndoorAir.getLastKnownIndoorAir();
-            if(air.getPm10Grade() == 3 || air.getPm25Grade() == 3){
-                switch (inAir.getQuality()){
-                    case 1:
-                        ventilation_status.setText("환기가 필요없습니다");
-                        ventilation_time.setText("0분");
-                        break;
-                    case 2:
-                        ventilation_status.setText("환기가 필요합니다");
-                        ventilation_time.setText("5분");
-                        break;
-                    case 3:
-                        ventilation_status.setText("환기가 필요합니다");
-                        ventilation_time.setText("10분");
-                        break;
-                }
+    public void updateVentilation(TextView ventilation_status, TextView ventilation_time, IndoorAir indoorAir, OutdoorAir outdoorAir){
+        if(outdoorAir.getPm10Grade() == 3 || outdoorAir.getPm25Grade() == 3){
+            switch (indoorAir.getQuality()){
+                case 1:
+                    ventilation_status.setText("환기가 필요없습니다");
+                    ventilation_time.setText("0분");
+                    break;
+                case 2:
+                    ventilation_status.setText("환기가 필요합니다");
+                    ventilation_time.setText("5분");
+                    break;
+                case 3:
+                    ventilation_status.setText("환기가 필요합니다");
+                    ventilation_time.setText("10분");
+                    break;
             }
-            else if(air.getPm10Grade() == 4 || air.getPm25Grade() == 4){
-                switch (inAir.getQuality()){
-                    case 1:
-                        ventilation_status.setText("환기가 필요없습니다");
-                        ventilation_time.setText("0분");
-                        break;
-                    case 2:
-                        ventilation_status.setText("환기가 필요없습니다");
-                        ventilation_time.setText("0분");
-                        break;
-                    case 3:
-                        ventilation_status.setText("환기가 필요합니다");
-                        ventilation_time.setText("10분");
-                        break;
-                }
+        }
+        else if(outdoorAir.getPm10Grade() == 4 || outdoorAir.getPm25Grade() == 4){
+            switch (indoorAir.getQuality()){
+                case 1:
+                    ventilation_status.setText("환기가 필요없습니다");
+                    ventilation_time.setText("0분");
+                    break;
+                case 2:
+                    ventilation_status.setText("환기가 필요없습니다");
+                    ventilation_time.setText("0분");
+                    break;
+                case 3:
+                    ventilation_status.setText("환기가 필요합니다");
+                    ventilation_time.setText("10분");
+                    break;
             }
-            else{
-                switch (inAir.getQuality()){
-                    case 1:
-                        ventilation_status.setText("환기가 필요없습니다");
-                        ventilation_time.setText("0분");
-                        break;
-                    case 2:
-                        ventilation_status.setText("환기가 필요합니다");
-                        ventilation_time.setText("15분");
-                        break;
-                    case 3:
-                        ventilation_status.setText("환기가 필요합니다");
-                        ventilation_time.setText("30분");
-                        break;
-                }
+        }
+        else{
+            switch (indoorAir.getQuality()){
+                case 1:
+                    ventilation_status.setText("환기가 필요없습니다");
+                    ventilation_time.setText("0분");
+                    break;
+                case 2:
+                    ventilation_status.setText("환기가 필요합니다");
+                    ventilation_time.setText("15분");
+                    break;
+                case 3:
+                    ventilation_status.setText("환기가 필요합니다");
+                    ventilation_time.setText("30분");
+                    break;
             }
         }
     }
+
+
 }
