@@ -31,6 +31,7 @@ import com.cbnu.josimair.R;
 import com.cbnu.josimair.ui.bluetooth.DeviceListActivity;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -46,7 +47,8 @@ public class Communication {
 
     private static final String TAG = "JosimAirBluetooth";
     private static final String NAME_INSECURE = "JosimAirInsecure";
-    private static final UUID MY_UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+    //private static final UUID MY_UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+    private static final UUID MY_UUID_INSECURE = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
     // Member fields
     private Context mContext;
@@ -425,22 +427,38 @@ public class Communication {
 
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
-            byte[] buffer = new byte[1024];
+            //byte[] buffer = new byte[1024];
+            char[] buffer = new char[1024];
             int bytes;
-
+            InputStreamReader isr = new InputStreamReader(mmInStream);
+            String now="";
             // Connected 상태인 동안 InputStread을 계속 listen
             while (mState == STATE_CONNECTED) {
                 try {
                     // Read from the InputStream
-                    bytes = mmInStream.read(buffer);
-                    int value = (int)(Math.random()*40);
+                    //bytes = mmInStream.read(buffer);
+                    bytes = isr.read(buffer);
+                    //int value = (int)(Math.random()*40);
+                    int value = -1;
+                    for(int i=0;i<bytes;i++){
+                        if(buffer[i]=='\r'){
+                            value = Integer.parseInt(now);
+                        }else if(buffer[i]=='\n'){
+                            now ="";
+                        }else{
+                            now+=buffer[i];
+                        }
+                    }
+
                     /*
                     int value = bytes to int
                     구현해야 할 부분
                     */
-                    IndoorAir indoorAir = new IndoorAir(value);
-                    // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(Constants.MESSAGE_READ,indoorAir).sendToTarget();
+                    if(value!=-1) {
+                        IndoorAir indoorAir = new IndoorAir(value);
+                        // Send the obtained bytes to the UI Activity
+                        mHandler.obtainMessage(Constants.MESSAGE_READ, indoorAir).sendToTarget();
+                    }
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();

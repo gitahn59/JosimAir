@@ -45,9 +45,9 @@ public class IndoorAir {
     public IndoorAir(float value){
         this.time = new Date(System.currentTimeMillis());
         this.value = value;
-        if(0<=value && value<=9){
+        if(0<=value && value<=350){
             quality = 1;
-        }else if(9<value && value <=25){
+        }else if(350<value && value <=700){
             quality = 2;
         }else{
             quality = 3;
