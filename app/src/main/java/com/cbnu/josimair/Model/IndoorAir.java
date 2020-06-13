@@ -41,7 +41,7 @@ public class IndoorAir {
     }
 
     private static IndoorAir lastKnownIndoorAir = null;
-
+    private static int badCount = 0;
     public IndoorAir(float value){
         this.time = new Date(System.currentTimeMillis());
         this.value = value;
@@ -60,5 +60,15 @@ public class IndoorAir {
 
     public static synchronized void setLastKnownIndoorAir(IndoorAir last) {
         lastKnownIndoorAir = last;
+        int q = last.getQuality();
+        if((q==1 || q==2) && badCount>0){
+            badCount--;
+        }else if(q==3){
+            badCount++;
+        }
+    }
+
+    public static synchronized int getBadCount(){
+        return badCount;
     }
 }

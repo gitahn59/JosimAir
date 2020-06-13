@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         IndoorAir[] airs = new IndoorAir [7];
                         for(int i=0; i<7; i++){
-                            airs[i] = new IndoorAir((float)Math.random() * 40);
+                            airs[i] = new IndoorAir((float)Math.random() * 900);
                             Calendar now = Calendar.getInstance();
                             now.add(Calendar.DATE,-i);
                             Date d = now.getTime();
@@ -197,15 +197,15 @@ public class MainActivity extends AppCompatActivity {
                 communication.start();
                 return true;
             case R.id.action_btServer_Sign_btn:
-                byte[] bytes = new byte[4];
-                bytes[0] = 1;
-                bytes[1] = 1;
-                bytes[2] = 1;
-                bytes[3] = 1;
                 if(communication.getState() == Communication.STATE_CONNECTED) {
+                    byte[] bytes = new byte[4];
+                    bytes[0] = 1;
+                    bytes[1] = 1;
+                    bytes[2] = 1;
+                    bytes[3] = 1;
                     communication.write(bytes);
                 }else{
-                    IndoorAir indoorAir = new IndoorAir((int)(Math.random()*40));
+                    IndoorAir indoorAir = new IndoorAir((int)(Math.random()*900));
                     mCommunicationHandler.obtainMessage(Constants.MESSAGE_READ,indoorAir).sendToTarget();
                 }
                 return true;
@@ -237,8 +237,19 @@ public class MainActivity extends AppCompatActivity {
             String className = fragment.getClass().getSimpleName().trim();
             switch(msg.what){
                 case Constants.MESSAGE_READ:
-                    IndoorAir indoorAir = (IndoorAir)msg.obj;
+                    final IndoorAir indoorAir = (IndoorAir)msg.obj;
                     IndoorAir.setLastKnownIndoorAir(indoorAir);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AppDatabase.getInstance(getApplicationContext()).indoorAirDao().insertAll(indoorAir);
+                        }
+                    }).start();
+
+                    if(IndoorAir.getBadCount()>10){
+                        
+                    }
                     if(className.equals("HomeFragment")){
                         ((HomeFragment)fragment).updateIndoorAirInfo(indoorAir);
                     }else if(className.equals("AirInformationFragment")){
