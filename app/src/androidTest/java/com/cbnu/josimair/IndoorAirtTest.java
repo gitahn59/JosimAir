@@ -34,6 +34,6 @@ public class IndoorAirtTest {
         }
 
         // badCount 15 - 5 = 10 확인
-        assertEquals(0, IndoorAir.getBadCount());
+        assertEquals(10, IndoorAir.getBadCount());
     }
 }

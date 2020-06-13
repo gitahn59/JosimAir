@@ -2,9 +2,11 @@ package com.cbnu.josimair.ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
@@ -16,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.cbnu.josimair.Model.Alarm;
 import com.cbnu.josimair.Model.Constants;
 import com.cbnu.josimair.Model.IndoorAir;
 import com.cbnu.josimair.Model.LocationFinder;
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     final PermissionListener permissionListener = new LocationPermissionListener();
 
     public static Fragment fragment;
+    AlertDialog.Builder builder;
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive (Context context, Intent intent) {
@@ -106,6 +110,21 @@ public class MainActivity extends AppCompatActivity {
             lf.requestLocationUpdates();
             svc.start(lf.getLocation());
         }
+
+        builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("실내 공기 나쁨").setMessage("실내공기 상태가 좋지 않습니다.");
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Alarm.cancel();
+            }
+        });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Alarm.cancel();
+            }
+        });
     }
 
     @Override
@@ -205,8 +224,13 @@ public class MainActivity extends AppCompatActivity {
                     bytes[3] = 1;
                     communication.write(bytes);
                 }else{
-                    IndoorAir indoorAir = new IndoorAir((int)(Math.random()*900));
-                    mCommunicationHandler.obtainMessage(Constants.MESSAGE_READ,indoorAir).sendToTarget();
+                    //IndoorAir indoorAir = new IndoorAir((int)(Math.random()*900));
+                    for(int i=0;i<10;i++) {
+                        IndoorAir indoorAir = new IndoorAir(900);
+                        IndoorAir.setLastKnownIndoorAir(indoorAir);
+                    }
+                    IndoorAir indoorAir = new IndoorAir(900);
+                    mCommunicationHandler.obtainMessage(Constants.MESSAGE_READ, indoorAir).sendToTarget();
                 }
                 return true;
             case R.id.action_btClient_btn:
@@ -248,8 +272,14 @@ public class MainActivity extends AppCompatActivity {
                     }).start();
 
                     if(IndoorAir.getBadCount()>10){
-                        
+                        if(Alarm.isNeeded()){
+                            Alarm.setLastAsNow();
+                            Alarm.notify(getApplicationContext());
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                        }
                     }
+
                     if(className.equals("HomeFragment")){
                         ((HomeFragment)fragment).updateIndoorAirInfo(indoorAir);
                     }else if(className.equals("AirInformationFragment")){
