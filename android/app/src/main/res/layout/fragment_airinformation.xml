@@ -140,7 +140,7 @@
             android:layout_toRightOf="@+id/micro_dust"
             android:layout_centerInParent="true"
             android:layout_marginLeft="50dp"
-            app:srcCompat="@drawable/dust" />
+            app:srcCompat="@drawable/no2" />
 
         <TextView
             android:id="@+id/No2ValueTextView"

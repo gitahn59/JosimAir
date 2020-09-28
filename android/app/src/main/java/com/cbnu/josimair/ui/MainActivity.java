@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(this, ManagementActivity.class);
                 this.startActivity(intent);
                 return true;
+            /*
             case R.id.action_add_btn:
                 new Thread(new Runnable() {
                     @Override
@@ -233,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
                     mCommunicationHandler.obtainMessage(Constants.MESSAGE_READ, indoorAir).sendToTarget();
                 }
                 return true;
+            */
             case R.id.action_btClient_btn:
                 if(!communication.enable()){
                     communication.showDialog();
