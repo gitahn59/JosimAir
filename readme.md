@@ -1,37 +1,39 @@
 # JosimAir
 
-아두이노로 측정한 실시간 실내공기정보를 안드로이드로 송신하고
-안드로이드는 외부 대기정보와 비교 후 사용자에게 환기 여부를 알려줍니다.
+## 1. 소개
+> JosimAir는 IoT 실내환기 알림 시스템을 목표로 개발되었다.     
+아두이노로 구성된 측정기는 실시간으로 실내 공기 정보를 측정하고 블루투스를 통해
+송신한다.    
+안드로이드 애플리케이션으로 구성된 수신기는 공기 정보를 수신 받아 사용자에게 제공한다.
 
-1. 외부 대기 정보 
-2. 실내 공기 정보
-3. 일간, 주간, 월간 통계 
+##### 프로젝트 목적
+> 실내에서 발생 된 유해한 공기는 건강에 치명적인 영향을 미친다. 하지만 이러한 공기는 눈에 보이지 않으며 그 오염 정도를 쉽게 파악할 수 없다. 따라서 이를 위한 대처 방안의 수요가 증가하고 있으며 그 방안 중 하나로 IoT 기술이 부각되고 있다. 
+ JosimAir는 아두이노로 구성한 IoT 시스템을 통해 이러한 문제에 대한 해결책을 제공한다. 
 
-<hr>   
+## 2. Demo   
 
 ## Demo   
+<img src="https://user-images.githubusercontent.com/16396879/94405031-e7cd6d80-01aa-11eb-9dcd-d0e78ca29ae9.jpg" width="400" height="600" />    
+<img src="https://user-images.githubusercontent.com/16396879/94405147-1ba89300-01ab-11eb-87c6-0b444467a70c.jpg" width="400" height="600" />    
+<img src="https://user-images.githubusercontent.com/16396879/94405185-26632800-01ab-11eb-93a7-de8a2623c3c2.jpg" width="400" height="600" />
 
-![demo](https://user-images.githubusercontent.com/16396879/79939600-7de1c700-849a-11ea-9f1c-caceb3c31bca.png)
+## 3. 기능
+> 1. 실시간 실내 대기 측정 정보 제공
+2. 외부 대기 정보 제공
+3. 환기 알림(진동, 소리)
+4. 환기 적정 시간 제공
+5. 일간, 주간, 월간 통계 자료 제공
 
-<hr>   
+## 5. 개발환경
+> Android Studio 4.0 : 안드로이드 애플리케이션 개발    
+> Arduino IDE 1.8.10 : 아두이노 측정기 개발
 
-## License 명시
-JosimAir는 다음과 같은 오픈소스를 원형, 가공하여 사용하고 있습니다.
+## 6. 사용방법
+> 1. 적절한 위치에 측정기 설치
+2. 배포 된 안드로이드 애플리케이션 설치
+3. 안드로이드에서 블루투스 페어링을 통해 측정기 식별
+4. JosimAir 앱을 실행하여 블루투스로 측정기와 연결
 
-#### Apache License 2.0
+## 7. 라이센스
+> 이 프로젝트는 MIT 라이센스를 사용한다.
 
-android-BluetoothChat : Copyright (C) 2014 The Android Open Source Project   
-MPAndroidChart : Copyright 2019 Philipp Jahoda   
-TedPermission : Copyright 2017 Ted Park   
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
