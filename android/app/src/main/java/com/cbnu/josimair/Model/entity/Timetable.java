@@ -1,10 +1,12 @@
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.Model.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
+
+import com.cbnu.josimair.Model.util.Converters;
 
 import java.util.ArrayList;
 import java.util.Calendar;

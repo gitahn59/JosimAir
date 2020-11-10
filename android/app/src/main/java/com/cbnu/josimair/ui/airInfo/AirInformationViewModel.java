@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.cbnu.josimair.Model.IndoorAir;
-import com.cbnu.josimair.Model.OutdoorAir;
+import com.cbnu.josimair.Model.entity.IndoorAir;
+import com.cbnu.josimair.Model.entity.OutdoorAir;
 import com.cbnu.josimair.R;
 
 public class AirInformationViewModel extends ViewModel {

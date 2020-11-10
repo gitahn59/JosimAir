@@ -2,9 +2,9 @@ package com.cbnu.josimair.dao;
 
 import androidx.room.*;
 
-import com.cbnu.josimair.Model.IndoorAir;
-import com.cbnu.josimair.Model.IndoorAirGroup;
-import com.cbnu.josimair.Model.Timetable;
+import com.cbnu.josimair.Model.entity.IndoorAir;
+import com.cbnu.josimair.Model.entity.IndoorAirGroup;
+import com.cbnu.josimair.Model.entity.Timetable;
 
 import java.util.Date;
 import java.util.List;

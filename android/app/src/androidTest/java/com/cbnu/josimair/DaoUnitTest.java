@@ -1,22 +1,14 @@
 package com.cbnu.josimair;
 
 import android.content.Context;
-import android.location.Location;
 
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.cbnu.josimair.Model.AppDatabase;
-import com.cbnu.josimair.Model.IndoorAirGroup;
-import com.cbnu.josimair.Model.OutdoorAir;
-import com.cbnu.josimair.Model.RestAPIService;
-import com.cbnu.josimair.Model.StatisticsService;
+import com.cbnu.josimair.Model.service.StatisticsService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.Calendar;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 

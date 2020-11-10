@@ -1,6 +1,9 @@
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.Model.service;
 
 import android.content.Context;
+
+import com.cbnu.josimair.Model.entity.IndoorAirGroup;
+import com.cbnu.josimair.dao.AppDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,7 +45,7 @@ public class StatisticsService {
         Calendar to = Calendar.getInstance();
         Calendar from = Calendar.getInstance();
         from.add(Calendar.HOUR, -24);
-        List<IndoorAirGroup> li = db.indoorAirDao().getGroupByHourBetweenDatesWithTimeTable(from.getTime(),to.getTime());
+        List<IndoorAirGroup> li = db.getDao().getGroupByHourBetweenDatesWithTimeTable(from.getTime(),to.getTime());
         return sortOrderbyTime(li, from.get(Calendar.HOUR_OF_DAY));
     }
 
@@ -63,7 +66,7 @@ public class StatisticsService {
         to.set(Calendar.MINUTE,59);
         to.set(Calendar.SECOND,59);
 
-        return db.indoorAirDao().getGroupByDayBetweenDatesWithTimeTable(from.getTime(), to.getTime());
+        return db.getDao().getGroupByDayBetweenDatesWithTimeTable(from.getTime(), to.getTime());
     }
 
     /**
@@ -79,6 +82,6 @@ public class StatisticsService {
 
         Calendar to = Calendar.getInstance();
 
-        return db.indoorAirDao().getGroupByDayBetweenWeeksWithTimeTable(from.getTime(), to.getTime());
+        return db.getDao().getGroupByDayBetweenWeeksWithTimeTable(from.getTime(), to.getTime());
     }
 }

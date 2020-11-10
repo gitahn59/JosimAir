@@ -1,8 +1,6 @@
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.Model.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class OutdoorAir {
     //Outdoor Air Infomation factor - s

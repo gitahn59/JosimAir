@@ -1,4 +1,4 @@
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.Model.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
