@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.cbnu.josimair.Model.IndoorAir;
-import com.cbnu.josimair.Model.OutdoorAir;
+import com.cbnu.josimair.Model.entity.IndoorAir;
+import com.cbnu.josimair.Model.entity.OutdoorAir;
 import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 

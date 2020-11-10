@@ -8,11 +8,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.cbnu.josimair.Model.IndoorAir;
-import com.cbnu.josimair.Model.IndoorAirGroup;
-import com.cbnu.josimair.Model.OutdoorAir;
+import com.cbnu.josimair.Model.entity.IndoorAir;
+import com.cbnu.josimair.Model.entity.IndoorAirGroup;
+import com.cbnu.josimair.Model.entity.OutdoorAir;
 import com.cbnu.josimair.R;
-import com.cbnu.josimair.ui.MainActivity;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;

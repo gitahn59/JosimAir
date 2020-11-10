@@ -6,21 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import com.cbnu.josimair.Model.AppDatabase;
+import com.cbnu.josimair.dao.AppDatabase;
 import com.cbnu.josimair.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class ManagementActivity extends AppCompatActivity {
 
@@ -68,7 +65,7 @@ public class ManagementActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        AppDatabase.getInstance(getApplicationContext()).indoorAirDao().deleteAllBetweenDates(start.getTime(),end.getTime());
+                        AppDatabase.getInstance(getApplicationContext()).getDao().deleteAllBetweenDates(start.getTime(),end.getTime());
                     }
                 }).start();
             }

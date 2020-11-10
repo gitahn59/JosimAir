@@ -6,8 +6,8 @@ import android.location.Location;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.cbnu.josimair.Model.OutdoorAir;
-import com.cbnu.josimair.Model.RestAPIService;
+import com.cbnu.josimair.Model.entity.OutdoorAir;
+import com.cbnu.josimair.Model.service.RestAPIService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

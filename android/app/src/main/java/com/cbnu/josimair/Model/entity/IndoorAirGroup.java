@@ -1,4 +1,4 @@
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.Model.entity;
 
 import java.util.Date;
 

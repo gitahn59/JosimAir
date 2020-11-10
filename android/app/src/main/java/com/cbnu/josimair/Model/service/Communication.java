@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.Model.service;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -27,6 +27,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.cbnu.josimair.Model.util.Constants;
+import com.cbnu.josimair.Model.entity.IndoorAir;
 import com.cbnu.josimair.R;
 import com.cbnu.josimair.ui.bluetooth.DeviceListActivity;
 import java.io.IOException;

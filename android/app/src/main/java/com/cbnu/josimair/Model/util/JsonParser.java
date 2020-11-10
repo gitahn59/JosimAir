@@ -1,6 +1,8 @@
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.Model.util;
 
-import android.util.Pair;
+import com.cbnu.josimair.Model.entity.OutdoorAir;
+import com.cbnu.josimair.Model.service.RestAPIService;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

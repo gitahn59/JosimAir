@@ -1,9 +1,13 @@
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.Model.service;
 
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Handler;
+
+import com.cbnu.josimair.Model.util.Constants;
+import com.cbnu.josimair.Model.util.JsonParser;
+import com.cbnu.josimair.Model.entity.OutdoorAir;
 import com.cbnu.josimair.R;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

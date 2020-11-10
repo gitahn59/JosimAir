@@ -1,4 +1,4 @@
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.dao;
 
 import android.content.Context;
 
@@ -7,7 +7,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.cbnu.josimair.dao.DAO;
+import com.cbnu.josimair.Model.util.Converters;
+import com.cbnu.josimair.Model.entity.IndoorAir;
+import com.cbnu.josimair.Model.entity.Timetable;
 
 /**
  * Sqlite Database를 관리하는 Class
@@ -16,7 +18,7 @@ import com.cbnu.josimair.dao.DAO;
 @Database(entities = {IndoorAir.class, Timetable.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
-    public abstract DAO indoorAirDao();
+    public abstract DAO getDao();
 
     private static Object lock = new Object();
     private static AppDatabase instance;

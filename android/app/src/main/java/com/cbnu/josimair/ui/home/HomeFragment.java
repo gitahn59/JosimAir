@@ -13,19 +13,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.cbnu.josimair.Model.AppDatabase;
-import com.cbnu.josimair.Model.IndoorAir;
-import com.cbnu.josimair.Model.IndoorAirGroup;
-import com.cbnu.josimair.Model.OutdoorAir;
-import com.cbnu.josimair.Model.StatisticsService;
+import com.cbnu.josimair.Model.entity.IndoorAir;
+import com.cbnu.josimair.Model.entity.IndoorAirGroup;
+import com.cbnu.josimair.Model.entity.OutdoorAir;
+import com.cbnu.josimair.Model.service.StatisticsService;
 import com.cbnu.josimair.ui.MainActivity;
 import com.cbnu.josimair.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class HomeFragment extends Fragment {

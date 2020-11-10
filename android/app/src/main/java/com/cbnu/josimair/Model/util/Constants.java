@@ -1,4 +1,4 @@
-package com.cbnu.josimair.Model;
+package com.cbnu.josimair.Model.util;
 
 public interface Constants {
     // Communication Handler를 통해 생성되는 Message types

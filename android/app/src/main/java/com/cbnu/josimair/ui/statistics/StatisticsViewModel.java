@@ -1,29 +1,19 @@
 package com.cbnu.josimair.ui.statistics;
 
 import android.graphics.Color;
-import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.cbnu.josimair.Model.Converters;
-import com.cbnu.josimair.Model.IndoorAir;
-import com.cbnu.josimair.Model.IndoorAirGroup;
-import com.github.mikephil.charting.animation.Easing;
+import com.cbnu.josimair.Model.entity.IndoorAirGroup;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class StatisticsViewModel extends ViewModel {

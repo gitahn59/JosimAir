@@ -18,16 +18,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.cbnu.josimair.Model.Alarm;
-import com.cbnu.josimair.Model.Constants;
-import com.cbnu.josimair.Model.IndoorAir;
-import com.cbnu.josimair.Model.LocationFinder;
-import com.cbnu.josimair.Model.OutdoorAir;
-import com.cbnu.josimair.Model.ResourceChecker;
-import com.cbnu.josimair.Model.RestAPIService;
-import com.cbnu.josimair.Model.Communication;
-import com.cbnu.josimair.Model.AppDatabase;
-import com.cbnu.josimair.Model.Timetable;
+import com.cbnu.josimair.Model.util.Alarm;
+import com.cbnu.josimair.Model.util.Constants;
+import com.cbnu.josimair.Model.entity.IndoorAir;
+import com.cbnu.josimair.Model.service.LocationFinder;
+import com.cbnu.josimair.Model.entity.OutdoorAir;
+import com.cbnu.josimair.Model.util.ResourceChecker;
+import com.cbnu.josimair.Model.service.RestAPIService;
+import com.cbnu.josimair.Model.service.Communication;
+import com.cbnu.josimair.dao.AppDatabase;
+import com.cbnu.josimair.Model.entity.Timetable;
 import com.cbnu.josimair.R;
 import com.cbnu.josimair.ui.airInfo.AirInformationFragment;
 import com.cbnu.josimair.ui.bluetooth.DeviceListActivity;
@@ -44,11 +44,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 AppDatabase db = AppDatabase.getInstance(getApplicationContext());
-                if(db.indoorAirDao().isRaady()==0){
+                if(db.getDao().isRaady()==0){
                     List<Timetable> dates = Timetable.makeTimetalbes();
-                    db.indoorAirDao().insertAll(dates.toArray(new Timetable[0]));
+                    db.getDao().insertAll(dates.toArray(new Timetable[0]));
                 }
             }
         }).start();
@@ -269,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            AppDatabase.getInstance(getApplicationContext()).indoorAirDao().insertAll(indoorAir);
+                            AppDatabase.getInstance(getApplicationContext()).getDao().insertAll(indoorAir);
                         }
                     }).start();
 
